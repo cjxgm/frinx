@@ -1,6 +1,6 @@
 
-#ifndef ___MATH_VECTOR_H___
-#define ___MATH_VECTOR_H___
+#ifndef ___KE_VECTOR_H___
+#define ___KE_VECTOR_H___
 
 void vec_add(float vd[], float v1[], float v2[]);
 void vec_addv(float vd[], float v[]);
@@ -12,7 +12,7 @@ void vec_mul(float vd[], float v[], float s);
 void vec_mulv(float vd[], float s);
 
 float vec_dot(float v1[], float v2[]);
-void vec_cross(float vd[], float v1[], float v2[]):
+void vec_cross(float vd[], float v1[], float v2[]);
 
 float vec_sqr(float v[]);
 float vec_mod(float v[]);

@@ -1,5 +1,6 @@
 
 #include "vector.h"
+#include <math.h>
 
 // note: "a>" means vector a, while "a" means scaler a
 
@@ -105,7 +106,7 @@ float vec_sqr(float v[])
 
 float vec_mod(float v[])
 {
-	return sqrt(vec_sqr(v));
+	return sqrtf(vec_sqr(v));
 }
 
 

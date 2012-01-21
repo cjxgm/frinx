@@ -1,2 +1,2 @@
-FrinX Game Engine
+FrinX Game Engine - For GTA-Like Games
 ======================================================================
