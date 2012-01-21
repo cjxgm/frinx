@@ -1,5 +1,5 @@
 
-#include "link.h"
+#include "KE_link.h"
 #include <stdlib.h>
 
 void link_init(Link * lnk)

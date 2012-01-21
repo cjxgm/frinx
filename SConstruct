@@ -4,7 +4,7 @@ env = Environment(CC = 'gcc', \
 				  LIBS = Split('m GL glut openal vorbisfile'))
 
 launcher = 'launcher/fge.c'
-env.Program(target = 'fge', \
+env.Program(target = 'build/fge', \
 			source = Glob('src/*/*.c') + [launcher],\
 			CPPPATH = [str(f)+'/extern/' for f in Glob('src/*')])
 
