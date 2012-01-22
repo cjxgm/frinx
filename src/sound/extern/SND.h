@@ -1,6 +1,6 @@
 
-#ifndef __SND_MANAGER__
-#define __SND_MANAGER__
+#ifndef __SND_H__
+#define __SND_H__
 
 int SND_init();
 void SND_destroy();

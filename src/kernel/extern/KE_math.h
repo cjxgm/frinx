@@ -1,6 +1,6 @@
 
-#ifndef __KE_KE_H__
-#define __KE_KE_H__
+#ifndef __KE_MATH_H__
+#define __KE_MATH_H__
 
 #include "../vector.h"
 #include "../bezier.h"

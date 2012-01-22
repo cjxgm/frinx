@@ -1,7 +1,9 @@
 
 
-#include "snd_manager.h"
+#include "snd.h"
 #include <vorbis/vorbisfile.h>
+#include <pthread.h>
+#include <stdlib.h>
 
 #define BUFFER_SIZE     1024*4       // 4 KB buffer
 #define BUFFER_CNT		4
@@ -22,7 +24,7 @@ static int ov_read2(OggVorbis_File * ogg, char * buf, int buf_size)
 	return cnt;
 }
 
-int SND_ogg_play(const char * file)
+static int snd_ogg_play(const char * file)
 {
 	ALint   state;
 	ALenum  format;
@@ -79,6 +81,13 @@ int SND_ogg_play(const char * file)
 _end:
 	ov_clear(&ogg);		// no need for fclose(fp)
 	alDeleteBuffers(BUFFER_CNT, buffer);
+	return 0;
+}
+
+int SND_ogg_play(const char * file)
+{
+	pthread_t th;
+	pthread_create(&th, NULL, (void *)&snd_ogg_play, (void *)file);
 	return 0;
 }
 

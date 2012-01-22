@@ -10,7 +10,11 @@
 	TYPE * next;
 
 
-#define TRAVERSE(TYPE, V, LNK) \
+// example:
+// 		{ TRAVERSE(link, Type, p) {
+// 			// do something with "p"
+// 		}}
+#define TRAVERSE(LNK, TYPE, V) \
 	TYPE * V = (TYPE *)LNK; \
 	while ((V = V->next) != (TYPE *)LNK)
 

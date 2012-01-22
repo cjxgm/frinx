@@ -1,5 +1,5 @@
 
-#include "snd_manager.h"
+#include "snd.h"
 #include <AL/alc.h>
 #include <stdlib.h>
 
