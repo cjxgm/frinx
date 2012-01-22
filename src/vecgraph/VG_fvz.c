@@ -19,9 +19,9 @@ VecGraph * VG_fvz_load(const char * file)
 	while (1) {
 		if (gzread(gf, &points[0], sizeof(float)*2) == 0)
 			break;
-		gzread(gf, &points[1], sizeof(float)*2);
-		gzread(gf, &points[2], sizeof(float)*2);
-		gzread(gf, &points[3], sizeof(float)*2);
+		gzread(gf, points[1], sizeof(float)*2);
+		gzread(gf, points[2], sizeof(float)*2);
+		gzread(gf, points[3], sizeof(float)*2);
 		link_addtail(&vg->eqts, bez_eqt3_get(points));
 	}
 

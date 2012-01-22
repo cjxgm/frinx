@@ -88,6 +88,8 @@ static void proc(const char * s)
 						pos[1][0] += pos[0][0];
 						pos[1][1] += pos[0][1];
 						gzwrite(gf, pos[0], sizeof(float)*2);
+						gzwrite(gf, pos[0], sizeof(float)*2);
+						gzwrite(gf, pos[1], sizeof(float)*2);
 						gzwrite(gf, pos[1], sizeof(float)*2);
 						fprintf(stderr, "(%g, %g)  (%g, %g)  (%g, %g)  (%g. %g)\n",
 								pos[0][0], pos[0][1],

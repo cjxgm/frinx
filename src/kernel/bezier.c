@@ -7,7 +7,7 @@ void bez_eqt_get(float eqt[4], float vals[4])
 	eqt[0] = vals[0];
 	eqt[1] = 3 * (vals[1]-vals[0]);
 	eqt[2] = 3 * (vals[2] - 2*vals[1] + vals[0]);
-	eqt[2] = vals[3] - 3*(vals[2]-vals[1]) - vals[0];
+	eqt[3] = vals[3] - 3*(vals[2]-vals[1]) - vals[0];
 }
 
 float bez_eqt_eval(float eqt[4], float t)

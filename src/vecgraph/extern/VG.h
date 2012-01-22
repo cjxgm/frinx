@@ -19,11 +19,6 @@ VecGraph;
 // the curve is more curvy when tprec is rather small (but still larger
 // than zero!)
 
-// This function invokes glVertex3f only.
-// example: VG_plot(vg, 0.0f, 1.0f, 1e-2f);
-void VG_plot(VecGraph * vg, float tbegin, float tend, float tprec);
-
-// This function invokes glBegin/glEnd and VG_plot
 // example: VG_draw(vg, 0.2f, 0.5f, 1e-3f, GL_LINE_STRIP);
 void VG_draw(VecGraph * vg, float tbegin, float tend, float tprec,
 													GLenum primitive);
