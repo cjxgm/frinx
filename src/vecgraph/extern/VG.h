@@ -10,7 +10,7 @@
 
 typedef struct VecGraph
 {
-	Link * bez;		// bezier equations
+	Link eqts;		// bezier equations
 }
 VecGraph;
 

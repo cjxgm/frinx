@@ -1,6 +1,6 @@
 
-#include "WM_manager.h"
-#include "SND_manager.h"
+#include "WM.h"
+#include "SND.h"
 #include "SND_ogg.h"
 
 int main()
