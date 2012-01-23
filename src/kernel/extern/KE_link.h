@@ -32,6 +32,7 @@ Link;
 void link_init(Link * lnk);
 void link_addtail(Link * lnk, void * data);
 void link_addhead(Link * lnk, void * data);
+long link_length(Link * lnk);
 void link_remove(void * data);
 void link_delete(void * data);
 

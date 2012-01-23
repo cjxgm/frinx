@@ -1,5 +1,6 @@
 
 #include "WM.h"
+#include "KE.h"
 #include <GL/glut.h>
 
 static void init_func()
@@ -33,15 +34,17 @@ int WM_create(int w, int h, const char * title)
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_LINE_SMOOTH);
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+	glEnable(GL_POINT_SMOOTH);
+	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 
 	glViewport(0, 0, 640, 480);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, 640, 0, 480, -1, 1);
+	glOrtho(0, 640, 0, 480, -10000, 10000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 

@@ -10,10 +10,6 @@ void VG_draw(VecGraph * vg, float tbegin, float tend, float tprec,
 	assert(vg);
 	assert(tprec >= 0.0f && tprec < 1.0f);
 
-	glPushMatrix();
-	glTranslatef(0, 480, 0);
-	glScalef(1, -1, 1);
-
 	{ TRAVERSE(&vg->eqts, BezEqt3, eqt3) {
 		float t;
 
@@ -25,7 +21,5 @@ void VG_draw(VecGraph * vg, float tbegin, float tend, float tprec,
 		}
 		glEnd();
 	}}
-
-	glPopMatrix();
 }
 

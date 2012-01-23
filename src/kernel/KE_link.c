@@ -21,6 +21,13 @@ void link_addhead(Link * lnk, void * data)
 	lnk->next = t;
 }
 
+long link_length(Link * lnk)
+{
+	long len = 0;
+	{ TRAVERSE(lnk, Link, p) len++; }
+	return len;
+}
+
 void link_remove(void * data)
 {
 	Link * t = data;
