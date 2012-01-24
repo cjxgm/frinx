@@ -132,6 +132,15 @@ void REN_logo()
 			FX_sparti_calc(sps[i]);
 		}
 	}
+	if (t > 10000 && state == 2) {
+		state++;
+
+		// free sps
+		int i;
+		for (i=0; i<sps_len; i++)
+			free(sps[i]);
+		free(sps);
+	}
 	glPopMatrix();
 }
 

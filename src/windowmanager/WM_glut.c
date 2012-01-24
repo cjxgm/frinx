@@ -2,11 +2,19 @@
 #include "WM.h"
 #include "KE.h"
 #include <GL/glut.h>
+#include <stdlib.h>
 
 static void init_func()
 {
 	KE_init();
 	glutIdleFunc((void *)&KE_idle);
+}
+
+static void keybd(unsigned char k, int x, int y)
+{
+	switch (k) {
+		case '\e': exit(0);
+	}
 }
 
 int WM_create(int w, int h, const char * title)
@@ -18,17 +26,17 @@ int WM_create(int w, int h, const char * title)
 	glutInitWindowSize(w, h);
 	glutCreateWindow(title);
 	glutTimerFunc(30, (void *)&init_func, 0);
+	glutKeyboardFunc(&keybd);
+	glutFullScreen();
 /*
 	glutMouseFunc(&click);
 	glutMotionFunc(&drag);
 	glutPassiveMotionFunc(&hover);
 
-	glutKeyboardFunc(&key);
 
 	glutReshapeFunc(&resize);
 	glutDisplayFunc(&display);
 #ifdef FULLSCREEN
-	glutFullScreen();
 #endif
 	*/
 	
