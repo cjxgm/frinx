@@ -1,16 +1,13 @@
 
 #include "WM.h"
 #include "KE.h"
-#include <GL/glut.h>
+#include <GL/gl.h>
+#include <SDL/SDL.h>
 #include <stdlib.h>
 
-static void init_func()
-{
-	KE_init();
-	glutIdleFunc((void *)&KE_idle);
-}
+static SDL_Surface * screen;
 
-static void keybd(unsigned char k, int x, int y)
+static void keybd(unsigned char k)
 {
 	switch (k) {
 		case '\e': exit(0);
@@ -19,15 +16,22 @@ static void keybd(unsigned char k, int x, int y)
 
 int WM_create(int w, int h, const char * title)
 {
-	int argc = 0;
-	glutInit(&argc, NULL);
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+		return -1;
+	atexit(&SDL_Quit);
 
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	screen = SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_FULLSCREEN);
+	SDL_WM_SetCaption(title, NULL);
+	SDL_ShowCursor(SDL_DISABLE);
+
+	/*glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(w, h);
 	glutCreateWindow(title);
 	glutTimerFunc(30, (void *)&init_func, 0);
 	glutKeyboardFunc(&keybd);
 	glutFullScreen();
+	*/
 /*
 	glutMouseFunc(&click);
 	glutMotionFunc(&drag);
@@ -39,6 +43,8 @@ int WM_create(int w, int h, const char * title)
 #ifdef FULLSCREEN
 #endif
 	*/
+
+	KE_init();
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -61,7 +67,29 @@ int WM_create(int w, int h, const char * title)
 
 void WM_mainloop()
 {
-	glutMainLoop();
+	// glutMainLoop();
+	int cont = 1;
+    SDL_Event event;
+
+	while (cont) {
+		while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+				case SDL_QUIT:
+					cont = 0;
+					break;
+				case SDL_KEYDOWN:
+					keybd(event.key.keysym.sym);
+					break;
+			}
+		}
+		KE_idle();
+	}
+
+	SDL_Quit();
 }
 
+void WM_swap()
+{
+	SDL_GL_SwapBuffers();
+}
 

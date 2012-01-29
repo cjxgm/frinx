@@ -1,33 +1,30 @@
 
-#include "snd.h"
-#include <AL/alc.h>
-#include <stdlib.h>
-
-ALuint snd_source;
+#include "SND.h"
+#include <SDL/SDL_mixer.h>
 
 int SND_init()
 {
-	ALCdevice  * dev = alcOpenDevice(NULL);
-	ALCcontext * ctx = alcCreateContext(dev, NULL);
-	alcMakeContextCurrent(ctx);
-
-	alGenSources(1, &snd_source);
-
-	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
-	alSource3f(snd_source, AL_POSITION, 0.0f, 0.0f, 0.0f);
-
-	return 0;
+	return Mix_OpenAudio(48000, AUDIO_S16LSB, 2, 4096);
 }
 
 void SND_destroy()
 {
-	alDeleteSources(1, &snd_source);
+	Mix_CloseAudio();
 }
 
 int SND_is_playing()
 {
-	ALint state;
-	alGetSourcei(snd_source, AL_SOURCE_STATE, &state);
-	return state == AL_PLAYING;
+	return Mix_PlayingMusic();
+}
+
+int SND_playmusic(SND_Music * mus)
+{
+	if (Mix_PlayMusic(mus, 0) < 0) return -1;
+	return 0;
+}
+
+void SND_freemusic(SND_Music * mus)
+{
+	Mix_FreeMusic(mus);
 }
 
