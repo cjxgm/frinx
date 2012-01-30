@@ -1,0 +1,36 @@
+# Frinx Object Exporter
+# by eXerigumo Clanjor
+# Copyright 2010-2012, licensed under GPLv2.
+# For Blender 2.6x
+
+###### CONFIG ######
+OUTPUT_FILE = "/tmp/test.fo"
+
+###### DON'T MODIFY CODES BELOW UNLESS YOU KNOW WHAT YOU'RE DOING! ######
+
+import bpy;
+from struct import *
+
+def fx_export(file):
+	def export_mesh(m):
+		# export vertices
+		file.write(pack("H", len(m.vertices)))
+		for v in m.vertices:
+			# vertex co, uv(TODO)
+			file.write(pack("fff", v.co[0], v.co[1], v.co[2]))
+
+		# export faces
+		file.write(pack("H", len(m.faces)))
+		for f in m.faces:
+			if len(f.vertices) != 3:
+				raise ValueError("Must only contain triangular faces!") 
+			# face triangle vertices id
+			file.write(pack("HHH", f.vertices[0], f.vertices[1], f.vertices[2]))
+
+	file = open(file, "wb")
+	file.write(pack("B", len(bpy.data.meshes)))
+	for mesh in bpy.data.meshes:
+		export_mesh(mesh)
+	file.close()
+
+fx_export(OUTPUT_FILE);

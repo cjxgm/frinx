@@ -6,6 +6,9 @@
 #include <stdlib.h>
 
 static SDL_Surface * screen;
+int WM_winw = 320;
+int WM_winh = 240;
+const char * WM_wintitle = "FrinX Game Engine";
 
 static void keybd(unsigned char k)
 {
@@ -20,8 +23,13 @@ int WM_create(int w, int h, const char * title)
 		return -1;
 	atexit(&SDL_Quit);
 
+	WM_winw = w;
+	WM_winh = h;
+	WM_wintitle = title;
+
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	screen = SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_FULLSCREEN);
+	screen = SDL_SetVideoMode(w, h, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER
+				/* | SDL_FULLSCREEN */ );
 	SDL_WM_SetCaption(title, NULL);
 	SDL_ShowCursor(SDL_DISABLE);
 

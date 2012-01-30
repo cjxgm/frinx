@@ -2,4 +2,5 @@
 
 * Sound: Ogg Vorbis (ogg)
 * VecGraph (Vector Graphics): Frinx Vector gZipped (fvz)
+* Object: Frinx Object
 

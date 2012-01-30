@@ -6,7 +6,7 @@
 int main()
 {
 	SND_init();
-	WM_create(640, 480, "Frinx Game Engine");
+	WM_create(640, 480, "FrinX Game Engine");
 	WM_mainloop();
 
 	SND_destroy();
