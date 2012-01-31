@@ -13,22 +13,9 @@ from struct import *
 def fx_export(file):
 	def export_mesh(m):
 		# export vertices
-		vs = []
-		# vertex co
-		for v in m.vertices:
-			vs.append([v.co, None]);
-		# uv
-		for uid in range(0, len(m.uv_textures[0].data)-1):
-			if vs[m.faces[uid].vertices[0]][1] == None:
-				vs[m.faces[uid].vertices[0]][1] = m.uv_textures[0].data[uid].uv1
-			if vs[m.faces[uid].vertices[1]][1] == None:
-				vs[m.faces[uid].vertices[1]][1] = m.uv_textures[0].data[uid].uv2
-			if vs[m.faces[uid].vertices[2]][1] == None:
-				vs[m.faces[uid].vertices[2]][1] = m.uv_textures[0].data[uid].uv3
-		# write out
 		file.write(pack("H", len(m.vertices)))
-		for v in vs:
-			file.write(pack("fffff", v[0][0], v[0][1], v[0][2], v[1][0], v[1][1]))
+		for v in m.vertices:
+			file.write(pack("fff", v.co[0], v.co[1], v.co[2]))
 
 		# export faces
 		file.write(pack("H", len(m.faces)))
@@ -37,6 +24,10 @@ def fx_export(file):
 				raise ValueError("Must only contain triangular faces!") 
 			# face triangle vertices id
 			file.write(pack("HHH", f.vertices[0], f.vertices[1], f.vertices[2]))
+			# uv coordinates
+			uv = m.uv_textures[0].data[f.index].uv_raw
+			for i in range(6):
+				file.write(pack("f", uv[i]))
 
 	file = open(file, "wb")
 	file.write(pack("B", len(bpy.data.meshes)))

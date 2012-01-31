@@ -18,7 +18,6 @@ static void setup_3d()
 	gluPerspective(45.0f, (float)WM_winw / (float)WM_winh, 1, 100);
 	glMatrixMode(GL_MODELVIEW);
 
-	glShadeModel(GL_SMOOTH);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glClearDepth(1.0);
@@ -34,7 +33,6 @@ static void setup_3d()
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
 		glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
-		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 	}
 }
@@ -55,12 +53,14 @@ void REN_main_init()
 
 void REN_main()
 {
+	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 	glPointSize(10);
 	float color[] = {1.0, 0.8, 0.0};
 	FX_sparti_draw(sp, color);
 	FX_sparti_calc(sp);
 
+	glEnable(GL_LIGHTING);
 	glEnable(GL_TEXTURE_2D);
 	OBJ_draw(obj);
 	glRotatef(KE_spf * 30, 0.5, 1, 0);

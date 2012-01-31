@@ -9,11 +9,14 @@ void OBJ_draw(OBJ_Object * obj)
 	int i;
 	for (i=0; i<obj->fs_cnt; i++) {
 		glNormal3fv(obj->ns[i].co);
-		glTexCoord2fv(obj->vs[obj->fs[i].id[0]].uv);
+
+		glTexCoord2fv(obj->fs[i].uv[0]);
 		glVertex3fv(obj->vs[obj->fs[i].id[0]].co);
-		glTexCoord2fv(obj->vs[obj->fs[i].id[1]].uv);
+
+		glTexCoord2fv(obj->fs[i].uv[1]);
 		glVertex3fv(obj->vs[obj->fs[i].id[1]].co);
-		glTexCoord2fv(obj->vs[obj->fs[i].id[2]].uv);
+
+		glTexCoord2fv(obj->fs[i].uv[2]);
 		glVertex3fv(obj->vs[obj->fs[i].id[2]].co);
 	}
 	glEnd();

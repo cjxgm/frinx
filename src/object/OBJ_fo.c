@@ -18,16 +18,20 @@ OBJ_Object * OBJ_fo_load(const char * file)
 
 	// read vertices
 	READ(obj->vs_cnt, fp);
-	obj->vs = malloc(sizeof(OBJ_Vertex) * obj->vs_cnt);
+	obj->vs = malloc(sizeof(OBJ_Coord) * obj->vs_cnt);
 	READ_ARRAY(obj->vs, obj->vs_cnt, fp);
-	// flip uv coord
-	for (i=0; i<obj->vs_cnt; i++)
-		obj->vs[i].uv[1] = 1.0f - obj->vs[i].uv[1];
 
 	// read faces
 	READ(obj->fs_cnt, fp);
 	obj->fs = malloc(sizeof(OBJ_Face) * obj->fs_cnt);
-	READ_ARRAY(obj->fs, obj->fs_cnt, fp);
+	for (i=0; i<obj->fs_cnt; i++) {
+		READ(obj->fs[i].id, fp);
+		READ(obj->fs[i].uv, fp);
+		// flip y-axis of uv
+		obj->fs[i].uv[0][1] = 1.0f - obj->fs[i].uv[0][1];
+		obj->fs[i].uv[1][1] = 1.0f - obj->fs[i].uv[1][1];
+		obj->fs[i].uv[2][1] = 1.0f - obj->fs[i].uv[2][1];
+	}
 	// calculate normals
 	obj->ns = malloc(sizeof(OBJ_Coord) * obj->fs_cnt);
 	for (i=0; i<obj->fs_cnt; i++) {
