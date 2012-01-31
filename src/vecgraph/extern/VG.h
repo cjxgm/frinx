@@ -8,11 +8,11 @@
 #include "KE_link.h"
 #include <GL/gl.h>
 
-typedef struct VecGraph
+typedef struct VG_Graph
 {
 	Link eqts;		// bezier equations
 }
-VecGraph;
+VG_Graph;
 
 // bezier curves are stored as parameter functions, whose parameter is "t".
 // tbegin,tend <- [0, 1];	tprec <- (0, 1)
@@ -20,7 +20,7 @@ VecGraph;
 // than zero!)
 
 // example: VG_draw(vg, 0.2f, 0.5f, 1e-3f, GL_LINE_STRIP);
-void VG_draw(VecGraph * vg, float tbegin, float tend, float tprec,
+void VG_draw(VG_Graph * vg, float tbegin, float tend, float tprec,
 													GLenum primitive);
 
 #endif

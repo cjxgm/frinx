@@ -1,10 +1,7 @@
 
 #include "REN_logo.h"
 #include "REN_main.h"
-#include "SND.h"
-#include "SND_ogg.h"
-#include "VG.h"
-#include "VG_fvz.h"
+#include "MAN_res.h"
 #include "KE.h"
 #include "KE_math.h"
 #include "KE_time.h"
@@ -12,7 +9,7 @@
 #include <GL/gl.h>
 #include <stdlib.h>
 
-static VecGraph   * vg;
+static VG_Graph   * vg;
 static SND_Music  * mus;
 static FX_SParti  * sp;
 static FX_SParti ** sps;
@@ -20,8 +17,8 @@ static int sps_len;
 
 void REN_logo_init()
 {
-	vg = VG_fvz_load("res/vecgraph/logo");
-	mus = SND_ogg_load("res/sound/logo");
+	vg  = MAN_res_loadvg ("logo");
+	mus = MAN_res_loadsnd("logo");
 			
 	// init sps
 	int i = 0;

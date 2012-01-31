@@ -1,10 +1,9 @@
-# Frinx Object Exporter
+# FrinX Object Exporter
 # by eXerigumo Clanjor
 # Copyright 2010-2012, licensed under GPLv2.
-# For Blender 2.6x
 
 ###### CONFIG ######
-OUTPUT_FILE = "/tmp/test.fo"
+OUTPUT_FILE = "/tmp/test.fxo"
 
 ###### DON'T MODIFY CODES BELOW UNLESS YOU KNOW WHAT YOU'RE DOING! ######
 
@@ -14,10 +13,22 @@ from struct import *
 def fx_export(file):
 	def export_mesh(m):
 		# export vertices
-		file.write(pack("H", len(m.vertices)))
+		vs = []
+		# vertex co
 		for v in m.vertices:
-			# vertex co, uv(TODO)
-			file.write(pack("fff", v.co[0], v.co[1], v.co[2]))
+			vs.append([v.co, None]);
+		# uv
+		for uid in range(0, len(m.uv_textures[0].data)-1):
+			if vs[m.faces[uid].vertices[0]][1] == None:
+				vs[m.faces[uid].vertices[0]][1] = m.uv_textures[0].data[uid].uv1
+			if vs[m.faces[uid].vertices[1]][1] == None:
+				vs[m.faces[uid].vertices[1]][1] = m.uv_textures[0].data[uid].uv2
+			if vs[m.faces[uid].vertices[2]][1] == None:
+				vs[m.faces[uid].vertices[2]][1] = m.uv_textures[0].data[uid].uv3
+		# write out
+		file.write(pack("H", len(m.vertices)))
+		for v in vs:
+			file.write(pack("fffff", v[0][0], v[0][1], v[0][2], v[1][0], v[1][1]))
 
 		# export faces
 		file.write(pack("H", len(m.faces)))

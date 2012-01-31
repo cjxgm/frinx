@@ -4,8 +4,7 @@
 #include "KE_time.h"
 #include "KE.h"
 #include "WM.h"
-#include "OBJ.h"
-#include "OBJ_fo.h"
+#include "MAN_res.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -19,14 +18,15 @@ static void setup_3d()
 	gluPerspective(45.0f, (float)WM_winw / (float)WM_winh, 1, 100);
 	glMatrixMode(GL_MODELVIEW);
 
+	glShadeModel(GL_SMOOTH);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glClearDepth(1.0);
 
 	/* lighting */ {
 		float light_pos[] = { 0, 0, 0, 1 };
-		float white_light[] = { 1.1, 1.1, 1.1, 1 };
-		float ambient[] = { 0.4, 0.4, 0.4, 1 };
+		float white_light[] = { 0.8, 0.8, 0.8, 1 };
+		float ambient[] = { 0.6, 0.6, 0.6, 1 };
 
 		glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, white_light);
@@ -46,26 +46,23 @@ void REN_main_init()
 	float p[] = {0, 0, -20};
 	FX_sparti_init(sp, v, v, p, 2000, 10, 10, 0, 1000);
 
-	obj = OBJ_fo_load("res/object/test");
+	obj = MAN_res_loadobj("test");
 
 	setup_3d();
-	//glTranslatef(320, 240, 0);
-	glScalef(0.1, 0.1, 0.1);
-	glTranslatef(0, 0, -20);
+	glTranslatef(0, 0, -10);
 	KE_time_reset();
 }
 
 void REN_main()
 {
+	glDisable(GL_TEXTURE_2D);
 	glPointSize(10);
 	float color[] = {1.0, 0.8, 0.0};
 	FX_sparti_draw(sp, color);
 	FX_sparti_calc(sp);
 
-	long t = KE_time_get();
-	if (t<2000) glColor4f(1, 1, 1, lirp(t, 0, 2000, 0, 1));
-	else glColor3f(1, 1, 1);
+	glEnable(GL_TEXTURE_2D);
 	OBJ_draw(obj);
-	glRotatef(KE_spf * 10, 0.5, 1, 0);
+	glRotatef(KE_spf * 30, 0.5, 1, 0);
 }
 

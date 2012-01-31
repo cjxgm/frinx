@@ -4,7 +4,7 @@
 
 #include "VG.h"
 
-VecGraph * VG_fvz_load(const char * file);
+VG_Graph * VG_fvz_load(const char * file);
 
 #endif
 

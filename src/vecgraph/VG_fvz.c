@@ -5,12 +5,12 @@
 #include <assert.h>
 #include <zlib.h>
 
-VecGraph * VG_fvz_load(const char * file)
+VG_Graph * VG_fvz_load(const char * file)
 {
 	gzFile * gf = gzopen(file, "r");
-	assert(gf != NULL);
+	if (!gf) return NULL;
 
-	CREATE(VecGraph, vg);
+	CREATE(VG_Graph, vg);
 	link_init(&vg->eqts);
 
 	float points[4][3];

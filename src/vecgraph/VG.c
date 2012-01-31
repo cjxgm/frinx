@@ -4,7 +4,7 @@
 #include "KE_math.h"
 #include <assert.h>
 
-void VG_draw(VecGraph * vg, float tbegin, float tend, float tprec,
+void VG_draw(VG_Graph * vg, float tbegin, float tend, float tprec,
 													GLenum primitive)
 {
 	assert(vg);
