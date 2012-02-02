@@ -10,6 +10,8 @@
 
 static FX_SParti  * sp;
 static OBJ_Object * obj;
+static SND_Music  * music;
+static float a = 0.0f;
 
 static void setup_3d()
 {
@@ -23,17 +25,27 @@ static void setup_3d()
 	glClearDepth(1.0);
 
 	/* lighting */ {
-		float light_pos[] = { 0, 0, 0, 1 };
-		float white_light[] = { 0.8, 0.8, 0.8, 1 };
-		float ambient[] = { 0.6, 0.6, 0.6, 1 };
+		float light_pos[] = { -1, -1, 0, 0 };
+		float white_light[] = { 3, 3, 3, 1 };
+		//float ambient[] = { 1, 1, 1, 1 };
 
 		glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, white_light);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, white_light);
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-		glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+		//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+		//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
 		glEnable(GL_LIGHT0);
+	}
+	/* lighting */ {
+		float light_pos[] = { 1, 1, 1, 0 };
+		float white_light[] = { 1, 1, 1, 1 };
+
+		glLightfv(GL_LIGHT1, GL_POSITION, light_pos);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, white_light);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, white_light);
+
+		glEnable(GL_LIGHT1);
 	}
 }
 
@@ -44,10 +56,12 @@ void REN_main_init()
 	float p[] = {0, 0, -20};
 	FX_sparti_init(sp, v, v, p, 2000, 10, 10, 0, 1000);
 
-	obj = MAN_res_loadobj("test");
+	obj = MAN_res_loadobj("city");
+	music = MAN_res_loadsnd("intro");
 
 	setup_3d();
-	glTranslatef(0, 0, -10);
+	glTranslatef(0, 0, -4);
+	SND_playmusic(music);
 	KE_time_reset();
 }
 
@@ -62,7 +76,9 @@ void REN_main()
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_TEXTURE_2D);
-	OBJ_draw(obj);
-	glRotatef(KE_spf * 30, 0.5, 1, 0);
+	glPushMatrix(); {
+		glRotatef(a += KE_spf * 30, 0, 1, 0);
+		OBJ_draw(obj);
+	} glPopMatrix();
 }
 
