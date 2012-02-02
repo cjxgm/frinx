@@ -6,6 +6,7 @@
 #include "KE_math.h"
 #include "KE_time.h"
 #include "FX_sparti.h"
+#include "WM.h"
 #include <GL/gl.h>
 #include <stdlib.h>
 
@@ -56,6 +57,16 @@ static void free_data()
 	free(sps);
 }
 
+static void proc_key()
+{
+	static unsigned char last = 0;
+	if (last && !WM_keydown) {
+		free_data();
+		KE_SET_RENDERER(main);
+	}
+	last = WM_keydown;
+}
+
 void REN_logo()
 {
 	// when playing began, reset time;
@@ -72,6 +83,8 @@ void REN_logo()
 		KE_SET_RENDERER(main);
 	}
 	else return;
+
+	proc_key();
 
 	// logo animation
 	glPushMatrix();

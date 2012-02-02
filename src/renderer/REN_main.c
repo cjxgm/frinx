@@ -5,13 +5,20 @@
 #include "KE.h"
 #include "WM.h"
 #include "MAN_res.h"
+#include "CAM.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <stdlib.h>
 
 static FX_SParti  * sp;
 static OBJ_Object * obj;
 static SND_Music  * music;
-static float a = 0.0f;
+static CAM_Camera   cam = {
+	{ 0, 0, 0 },	// target
+	{ 0, 0, -1 },	// forward
+	{ 0, 1, 0 },	// up
+	2				// dist
+};
 
 static void setup_3d()
 {
@@ -52,21 +59,43 @@ static void setup_3d()
 void REN_main_init()
 {
 	sp = FX_sparti_new(1000);
-	float v[] = {0, 0, 0};
-	float p[] = {0, 0, -20};
+	float v[] = {0, 10, 5};
+	float p[] = {0, 0, -10};
 	FX_sparti_init(sp, v, v, p, 2000, 10, 10, 0, 1000);
 
 	obj = MAN_res_loadobj("city");
 	music = MAN_res_loadsnd("intro");
 
 	setup_3d();
-	glTranslatef(0, 0, -4);
+	//glTranslatef(0, 0, -4);
 	SND_playmusic(music);
 	KE_time_reset();
 }
 
+static void proc_key()
+{
+	if (WM_key['\e']) exit(0);
+
+	if (WM_key['w']) {
+		cam.target[0] += cam.forward[0] * 3*KE_spf;
+		/* DO NOT MOVE UP */
+		cam.target[2] += cam.forward[2] * 3*KE_spf;
+	}
+	if (WM_key['s']) {
+		cam.target[0] -= cam.forward[0] * 3*KE_spf;
+		/* DO NOT MOVE DOWN */
+		cam.target[2] -= cam.forward[2] * 3*KE_spf;
+	}
+	if (WM_key[WM_KEY_LEFT])
+		CAM_turny(&cam, +2*KE_spf);
+	if (WM_key[WM_KEY_RIGHT])
+		CAM_turny(&cam, -2*KE_spf);
+}
+
 void REN_main()
 {
+	proc_key();
+
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 	glPointSize(10);
@@ -77,7 +106,7 @@ void REN_main()
 	glEnable(GL_LIGHTING);
 	glEnable(GL_TEXTURE_2D);
 	glPushMatrix(); {
-		glRotatef(a += KE_spf * 30, 0, 1, 0);
+		CAM_apply(&cam);
 		OBJ_draw(obj);
 	} glPopMatrix();
 }

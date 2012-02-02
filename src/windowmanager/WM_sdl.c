@@ -3,19 +3,14 @@
 #include "KE.h"
 #include <GL/gl.h>
 #include <SDL/SDL.h>
-#include <stdlib.h>
 
 static SDL_Surface * screen;
 int WM_winw = 320;
 int WM_winh = 240;
 const char * WM_wintitle = "FrinX Game Engine";
-
-static void keybd(unsigned char k)
-{
-	switch (k) {
-		case '\e': exit(0);
-	}
-}
+unsigned char WM_key[384] = {0};
+unsigned char WM_keydown = 0;
+unsigned short WM_kmod = WM_KMOD_NONE;
 
 int WM_create(int w, int h, const char * title)
 {
@@ -86,7 +81,14 @@ void WM_mainloop()
 					cont = 0;
 					break;
 				case SDL_KEYDOWN:
-					keybd(event.key.keysym.sym);
+					WM_key[event.key.keysym.sym] = 1;
+					WM_kmod = SDL_GetModState();
+					WM_keydown = 1;
+					break;
+				case SDL_KEYUP:
+					WM_key[event.key.keysym.sym] = 0;
+					WM_kmod = SDL_GetModState();
+					WM_keydown = 0;
 					break;
 			}
 		}
