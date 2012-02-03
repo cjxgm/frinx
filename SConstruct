@@ -1,7 +1,7 @@
 
 env = Environment(CC = 'gcc', \
 				  CCFLAGS = '-Wall -Werror -s -Ofast', \
-				  LIBS = Split('m z GL GLU SDL SDL_mixer SDL_image'))
+				  LIBS = Split('m z GL GLU SDL SDL_mixer SDL_image SDL_ttf'))
 
 launcher = 'launcher/fge.c'
 env.Program(target = 'build/fge', \

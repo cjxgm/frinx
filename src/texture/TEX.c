@@ -35,7 +35,6 @@ int TEX_load(const char * file)
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexImage2D(GL_TEXTURE_2D, 0, clr_cnt, img->w, img->h,
 			0, tex_fmt, GL_UNSIGNED_BYTE, img->pixels);
 	SDL_FreeSurface(img);

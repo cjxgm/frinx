@@ -7,6 +7,7 @@
 #include "KE_time.h"
 #include "FX_sparti.h"
 #include "WM.h"
+#include "FON.h"
 #include <GL/gl.h>
 #include <stdlib.h>
 
@@ -113,6 +114,12 @@ void REN_logo()
 		VG_draw(vg, 0.0f, 1.0f, 0.01f, GL_LINE_STRIP);
 		glPopMatrix();
 
+		FON_render(lirp(t, 2000, 3000, WM_winw/4, WM_winw/2), WM_winh*5/6,
+					"～缚淋X～",
+					lirp(t, 2000, 3000, 0, 255),
+					lirp(t, 2000, 3000, 0, 255),
+					0);
+
 		// draw sp
 		if (t >= 2200) {
 			glPointSize(10);
@@ -129,11 +136,15 @@ void REN_logo()
 		glLineWidth(5);
 		glColor4f(1.0f, 0.8f, 0.0f, lirp(t, 3000, 6000, 1, 0));
 		VG_draw(vg, 0.0f, 1.0f, 0.01f, GL_LINE_STRIP);
+
+		FON_render(WM_winw/2, WM_winh*5/6, "～缚淋X～", 255, 255, 0);
 	}
 	else if (t < 8000){
 		glLineWidth(1);
 		glColor3f(1.0f, 0.8f, 0.0f);
 		VG_draw(vg, 0.0f, 1.0f, 0.005f, GL_LINE_STRIP);
+
+		FON_render(WM_winw/2, WM_winh*5/6, "～缚淋X～", 255, 255, 0);
 	}
 	else if (t < 9000){
 		glLineWidth(1);
@@ -141,6 +152,11 @@ void REN_logo()
 		VG_draw(vg, lirp(t, 8000, 9000, 0.0f, 0.5f),
 					lirp(t, 8000, 9000, 1.0f, 0.5f),
 					0.005f, GL_LINE_STRIP);
+		FON_render(lirp(t, 8000, 9000, WM_winw/2, WM_winw), WM_winh*5/6,
+					"～缚淋X～",
+					lirp(t, 8000, 9000, 255, 0),
+					lirp(t, 8000, 9000, 255, 0),
+					0);
 	}
 	// draw sps
 	if (t > 8200 && t <= 10000) {

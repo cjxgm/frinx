@@ -1,5 +1,6 @@
 
 #include "REN_main.h"
+#include "REN_staff.h"
 #include "FX_sparti.h"
 #include "KE_time.h"
 #include "KE.h"
@@ -75,7 +76,7 @@ void REN_main_init()
 	music = MAN_res_loadsnd("intro");
 
 ///////// INIT PHYSICS ////////
-#define VS		3
+#define VS		30
 #define CO(X,Z)	((Z)*VS+(X))
 
 	mesh.vs_cnt = VS*VS;
@@ -130,7 +131,11 @@ void REN_main_init()
 
 static void proc_key()
 {
-	if (WM_key['\e']) exit(0);
+	static int wait_release = 0;
+	if (WM_key['\e'])
+		wait_release = 1;
+	else if (wait_release)
+		KE_SET_RENDERER(staff);
 
 	if (WM_key['w']) {
 		cam.target[0] += cam.forward[0] * 3*KE_spf;
@@ -207,8 +212,8 @@ void REN_main()
 			}
 			for (i=0; i<cons_cnt; i++)
 				PHYS_con_stick_apply(&cons[i]);
-			//mesh.vs[mesh.vs_cnt>>1].co[1] = 0.6;
-			//vec_cpy(mesh.vs[0].co, target);
+			mesh.vs[mesh.vs_cnt>>1].co[1] = 0.6;
+			vec_cpy(mesh.vs[0].co, target);
 			vec_cpy(mesh.vs[mesh.vs_cnt-1].co, cam.target);
 		}
 //// DRAW

@@ -14,5 +14,7 @@
 #define READ_ARRAY(VAR, CNT, FP)	fread(VAR, sizeof(*(VAR)), (CNT), (FP))
 #define READ(VAR, FP)				READ_ARRAY(&(VAR), 1, (FP))
 
+#define LEN(A)						(sizeof(A)/sizeof(*(A)))
+
 #endif
 

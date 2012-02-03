@@ -19,3 +19,7 @@ Just type:
 All the codes are licensed under GPLv2 while all the artworks are licensed
 under CC-BY-SA 3.0 Unported.
 
+## Known Issues
+* Collision detection cannot work
+* Staff is too slow.
+

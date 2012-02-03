@@ -58,10 +58,12 @@ int WM_create(int w, int h, const char * title)
 	glEnable(GL_POINT_SMOOTH);
 	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 
-	glViewport(0, 0, 640, 480);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, 640, 0, 480, -10000, 10000);
+	glOrtho(0, w, 0, h, -10000, 10000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
