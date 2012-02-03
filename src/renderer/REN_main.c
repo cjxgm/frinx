@@ -16,7 +16,7 @@ static OBJ_Object * obj;
 static SND_Music  * music;
 static CAM_Camera   cam = {
 	{ 0, 0, 0 },	// target
-	{ 0, 0, 1 },	// forward
+	{ 0, 0, -1 },	// forward
 	{ 0, 1, 0 },	// up
 	2				// dist
 };
@@ -75,7 +75,7 @@ void REN_main_init()
 	music = MAN_res_loadsnd("intro");
 
 ///////// INIT PHYSICS ////////
-#define VS		30
+#define VS		3
 #define CO(X,Z)	((Z)*VS+(X))
 
 	mesh.vs_cnt = VS*VS;
@@ -87,7 +87,7 @@ void REN_main_init()
 	mesh.ns = malloc(sizeof(OBJ_Coord)*mesh.fs_cnt);
 	cons    = malloc(sizeof(PHYS_ConStick)*cons_cnt);
 
-	float sss = 1.0f / VS;
+	float sss = 1.5f / VS;
 	int x, z;
 	int fid = 0, cid = 0;	// face id; cons id
 	for (z=0; z<VS; z++)
@@ -125,7 +125,6 @@ void REN_main_init()
 /////// INIT PHYSICS END //////
 
 	setup_3d();
-	SND_playmusic(music);
 	KE_time_reset();
 }
 
@@ -161,6 +160,12 @@ static void proc_key()
 		CAM_turny(&cam, +2*KE_spf);
 	if (WM_key[WM_KEY_RIGHT])
 		CAM_turny(&cam, -2*KE_spf);
+	if (WM_key[WM_KEY_UP]) {
+		cam.dist -= 3*KE_spf;
+		if (cam.dist < 0.1) cam.dist = 0.1;
+	}
+	if (WM_key[WM_KEY_DOWN])
+		cam.dist += 3*KE_spf;
 	
 	if (WM_key[' '])
 		vec_cpy(target, cam.target);
@@ -169,6 +174,8 @@ static void proc_key()
 void REN_main()
 {
 	proc_key();
+	if (!SND_is_playing())
+		SND_playmusic(music);
 
 	glPushMatrix(); {
 		CAM_apply(&cam);
@@ -191,13 +198,17 @@ void REN_main()
 			PHYS_verlet_apply(mesh.vs[i].co, oldco[i].co, force);
 
 		for (j=0; j<PREC; j++) {
-			for (i=0; i<mesh.vs_cnt; i++)
+			for (i=0; i<mesh.vs_cnt; i++) {
+				/*
 				if (mesh.vs[i].co[1] < -0.7)
 					mesh.vs[i].co[1] = -0.7;
+				*/
+				PHYS_collide(mesh.vs[i].co, oldco[i].co, obj);
+			}
 			for (i=0; i<cons_cnt; i++)
 				PHYS_con_stick_apply(&cons[i]);
-			mesh.vs[mesh.vs_cnt>>1].co[1] = 0.6;
-			vec_cpy(mesh.vs[0].co, target);
+			//mesh.vs[mesh.vs_cnt>>1].co[1] = 0.6;
+			//vec_cpy(mesh.vs[0].co, target);
 			vec_cpy(mesh.vs[mesh.vs_cnt-1].co, cam.target);
 		}
 //// DRAW
