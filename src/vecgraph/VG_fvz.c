@@ -7,7 +7,7 @@
 
 VG_Graph * VG_fvz_load(const char * file)
 {
-	gzFile * gf = gzopen(file, "r");
+	gzFile gf = gzopen(file, "r");
 	if (!gf) return NULL;
 
 	CREATE(VG_Graph, vg);

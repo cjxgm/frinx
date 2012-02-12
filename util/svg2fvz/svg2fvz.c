@@ -11,7 +11,7 @@
 static void proc(const char * s);
 
 float		tr_x, tr_y;
-gzFile	  * gf;
+gzFile	    gf;
 
 int main(int argc, char * argv[])
 {

@@ -4,9 +4,8 @@
 
 typedef struct FON_Text
 {
-	unsigned char * px;
+	unsigned int tex;
 	int w, h;
-	int fmt;
 }
 FON_Text;
 

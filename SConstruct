@@ -1,6 +1,6 @@
 
 env = Environment(CC = 'gcc', \
-				  CCFLAGS = '-Wall -Werror -s -Ofast', \
+				  CCFLAGS = '-Wall -Werror -s -O3', \
 				  LIBS = Split('m z GL GLU SDL SDL_mixer SDL_image SDL_ttf'))
 
 launcher = 'launcher/fge.c'

@@ -80,8 +80,6 @@ void REN_staff()
 	
 	FON_drawtext(10, WM_winh/4   , staff[sid].text[0]);
 	FON_drawtext(50, WM_winh/4+30, staff[sid].text[1]);
-	//SDL_Delay(10);
-	printf("%d  %g\n", sid, KE_spf);
 }
 
 

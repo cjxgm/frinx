@@ -3,6 +3,7 @@
 #include "WM.h"
 #include "KE_util.h"
 #include <GL/gl.h>
+#include <GL/glu.h>
 #include <SDL/SDL_ttf.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -43,35 +44,47 @@ FON_Text * FON_gettext(const char * str, int r, int g, int b)
 	}
 	else assert(!"Unknown surface format.");
 
-	// upside-down reverse
-	unsigned char * px = malloc(text->w * text->h * clr_cnt);
-	int ix, iy, i;
-	for (iy=0; iy<text->h; iy++)
-		for (ix=0; ix<text->w; ix++)
-			for (i=0; i<clr_cnt; i++)
-				px[(iy*text->w+ix)*clr_cnt+i] = ((unsigned char *)
-					text->pixels)[((text->h-iy-1)*text->w+ix)*clr_cnt+i];
-
 	CREATE(FON_Text, txt);
-	txt->px = px;
-	txt->w = text->w;
-	txt->h = text->h;
-	txt->fmt = tex_fmt;
+	for (txt->w=1; txt->w < text->w; txt->w<<=1);
+	for (txt->h=1; txt->h < text->h; txt->h<<=1);
 
+	glGenTextures(1, &txt->tex);
+	glBindTexture(GL_TEXTURE_2D, txt->tex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
+	glTexImage2D(GL_TEXTURE_2D, 0, clr_cnt, txt->w, txt->h,
+			0, tex_fmt, GL_UNSIGNED_BYTE, text->pixels);
+
+	int err = glGetError();
+	if (err != GL_NO_ERROR) {
+		printf("OpenGL Error: %s\n", gluErrorString(err));
+		assert(err == GL_NO_ERROR);
+	}
 	SDL_FreeSurface(text);
 	return txt;
 }
 
 void FON_drawtext(int x, int y, FON_Text * txt)
 {
-	void glWindowPos2i(int, int);	// I don't know why must I define this.
-	glWindowPos2i(x, WM_winh-y-txt->h);
-	glDrawPixels(txt->w, txt->h, txt->fmt, GL_UNSIGNED_BYTE, txt->px);
+	y = WM_winh - y - txt->h;
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, txt->tex);
+	glBegin(GL_QUADS); {
+		glTexCoord2f(0, 1);
+		glVertex2f(x, y);
+		glTexCoord2f(1, 1);
+		glVertex2f(x+txt->w, y);
+		glTexCoord2f(1, 0);
+		glVertex2f(x+txt->w, y+txt->h);
+		glTexCoord2f(0, 0);
+		glVertex2f(x, y+txt->h);
+	} glEnd();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void FON_freetext(FON_Text * txt)
 {
-	free(txt->px);
+	glDeleteTextures(1, &txt->tex);
 	free(txt);
 }
 
