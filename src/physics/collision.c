@@ -14,9 +14,10 @@ void PHYS_collide(float pos[3], float oldpos[3], OBJ_Object * obj)
 								 obj->vs[obj->fs[i].id[1]].co,
 								 obj->vs[obj->fs[i].id[2]].co,
 								 pos, oldpos, cp)) {
-			//vec_cpy(pos, cp);
-			vec_cpy(pos, oldpos);
-			return;
+			vec_cpy(pos, cp);
+			//pos[1]+=1;
+			//pos[1] = 1;
+			printf("%g  %g   %g\n", cp[0], cp[1], cp[2]);
 		}
 	}
 }
@@ -62,19 +63,19 @@ int  PHYS_collide_plane_seg(
 
 	if (a*b >= 0) return 0;
 
-	float d[3];
-	vec_sub(d, s2, s1);
-	vec_normv(d);
-	vec_mulv(d, fabs(vec_dot(n, s1)-vec_dot(n, p)));
-	vec_add(cp, s1, d);
+	vec_sub(cp, s2, s1);
+	vec_mulv(cp, a / (a-b) + 0.5);
+	vec_addv(cp, s1);
 	
 	return 1;
 }
 
-int  PHYS_classify_plane_point(
+float PHYS_classify_plane_point(
 	float n[3], float p[3],					// plane (a normal & a point)
 	float tp[3])							// the point
 {
-	return vec_dot(n, tp) - vec_dot(n, p);
+	float a = vec_dot(n, tp) - vec_dot(n, p);
+	if (a < 0.1f && a > 0.1f) return 0.0f;
+	return a;
 }
 

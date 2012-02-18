@@ -24,7 +24,7 @@ int  PHYS_collide_plane_seg(
 	float n[3], float p[3],					// plane (a normal & a point)
 	float s1[3], float s2[3],				// segment
 	float cp[3]);							// collision point
-int  PHYS_classify_plane_point(
+float PHYS_classify_plane_point(
 	float n[3], float p[3],					// plane (a normal & a point)
 	float tp[3]);							// the point
 
