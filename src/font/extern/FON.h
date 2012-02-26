@@ -6,6 +6,7 @@ typedef struct FON_Text
 {
 	unsigned int tex;
 	int w, h;
+	int realw, realh;
 }
 FON_Text;
 

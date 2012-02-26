@@ -27,18 +27,18 @@ void REN_logo_init()
 	sps_len = link_length(&vg->eqts);
 	sps = malloc(sizeof(void *) * sps_len);
 	{ TRAVERSE(&vg->eqts, BezEqt3, eqt3) {
-		sp = FX_sparti_new(50);
+		sp = FX_sparti_new(5);
 		float v[] = {0, -80, 0};
 		float p[3];
 		bez_eqt3_eval(eqt3, 0, p);
-		FX_sparti_init(sp, v, v, p, 900, 50, 20, 5, 900);
+		FX_sparti_init(sp, v, v, p, 900, 500, 50, 20, 5, 900);
 		sps[i++] = sp;
 	}}
 	// init sp
 	sp = FX_sparti_new(2000);
 	float vzero[] = {0, 0, 0};
 	float p[] = {160, 80, 0};
-	FX_sparti_init(sp, vzero, vzero, p, 700, 2000, 500, 10, 100);
+	FX_sparti_init(sp, vzero, vzero, p, 700, 0, 2000, 500, 10, 100);
 
 	SND_playmusic(mus);
 }
@@ -114,11 +114,14 @@ void REN_logo()
 		VG_draw(vg, 0.0f, 1.0f, 0.01f, GL_LINE_STRIP);
 		glPopMatrix();
 
+		glPushMatrix();
+		glLoadIdentity();
 		FON_render(lirp(t, 2000, 3000, WM_winw/4, WM_winw/2), WM_winh*5/6,
 					"～缚淋X～",
 					lirp(t, 2000, 3000, 0, 255),
 					lirp(t, 2000, 3000, 0, 255),
 					0);
+		glPopMatrix();
 
 		// draw sp
 		if (t >= 2200) {
@@ -137,14 +140,21 @@ void REN_logo()
 		glColor4f(1.0f, 0.8f, 0.0f, lirp(t, 3000, 6000, 1, 0));
 		VG_draw(vg, 0.0f, 1.0f, 0.01f, GL_LINE_STRIP);
 
+		glPushMatrix();
+		glLoadIdentity();
+		glColor4f(1.0f, 0.8f, 0.0f, 1.0f);
 		FON_render(WM_winw/2, WM_winh*5/6, "～缚淋X～", 255, 255, 0);
+		glPopMatrix();
 	}
 	else if (t < 8000){
 		glLineWidth(1);
 		glColor3f(1.0f, 0.8f, 0.0f);
 		VG_draw(vg, 0.0f, 1.0f, 0.005f, GL_LINE_STRIP);
 
+		glPushMatrix();
+		glLoadIdentity();
 		FON_render(WM_winw/2, WM_winh*5/6, "～缚淋X～", 255, 255, 0);
+		glPopMatrix();
 	}
 	else if (t < 9000){
 		glLineWidth(1);
@@ -152,11 +162,16 @@ void REN_logo()
 		VG_draw(vg, lirp(t, 8000, 9000, 0.0f, 0.5f),
 					lirp(t, 8000, 9000, 1.0f, 0.5f),
 					0.005f, GL_LINE_STRIP);
+
+		glPushMatrix();
+		glLoadIdentity();
+		glColor4f(1.0f, 0.8f, 0.0f, lirp(t, 8000, 9000, 1, 0));
 		FON_render(lirp(t, 8000, 9000, WM_winw/2, WM_winw), WM_winh*5/6,
 					"～缚淋X～",
 					lirp(t, 8000, 9000, 255, 0),
 					lirp(t, 8000, 9000, 255, 0),
 					0);
+		glPopMatrix();
 	}
 	// draw sps
 	if (t > 8200 && t <= 10000) {

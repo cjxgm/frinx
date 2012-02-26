@@ -70,7 +70,7 @@ void REN_main_init()
 	sp = FX_sparti_new(1000);
 	float v[] = {0, 10, 5};
 	float p[] = {0, 0, -10};
-	FX_sparti_init(sp, v, v, p, 2000, 10, 10, 0, 1000);
+	FX_sparti_init(sp, v, v, p, 2000, 1000, 10, 10, 0, 1000);
 
 	obj = MAN_res_loadobj("city");
 	music = MAN_res_loadsnd("intro");

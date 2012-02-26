@@ -11,17 +11,20 @@ FX_SParti * FX_sparti_new(int amount)
 	CREATE(FX_SParti, sp);
 	sp->amount = amount;
 	sp->active = 0;
+	sp->elapse = 0;
+	sp->time   = 0;
 	sp->ps = malloc(sizeof(SPartiInfo)*amount);
 	return sp;
 }
 
 void FX_sparti_init(FX_SParti * sp,
-					float a0[3], float v0[3], float pos0[3],
-					float life,  float _arand, float _vrand,
-					float _prand, float _lrand)
+					float a0[3], float v0[3],   float pos0[3],
+					float life,  long emittime, float _arand,
+					float _vrand,float _prand,  float _lrand)
 {
 #define RAND(V)		(((rand()%1001)-500) / 500.0f * (V))
 	sp->active = sp->amount;
+	sp->time   = emittime;
 
 	int i;
 	for (i=0; i<sp->amount; i++) {
@@ -46,7 +49,15 @@ void FX_sparti_init(FX_SParti * sp,
 void FX_sparti_calc(FX_SParti * sp)
 {
 	int i;
-	for (i=0; i<sp->amount; i++) {
+
+	int amount = sp->amount;
+	if (sp->time)
+		amount = (float)sp->elapse / (float)sp->time * sp->amount + 1;
+	if (amount > sp->amount) amount = sp->amount;
+
+	sp->elapse += KE_mspf;
+
+	for (i=0; i<amount; i++) {
 		if (!sp->ps[i].life) continue;
 		sp->ps[i].life -= KE_mspf;
 		if (sp->ps[i].life < 0) sp->ps[i].life = 0;
@@ -67,9 +78,14 @@ void FX_sparti_calc(FX_SParti * sp)
 
 void FX_sparti_draw(FX_SParti * sp, float color[3])
 {
+	int amount = sp->amount;
+	if (sp->time)
+		amount = (float)sp->elapse / (float)sp->time * sp->amount + 1;
+	if (amount > sp->amount) amount = sp->amount;
+
 	glBegin(GL_POINTS);
 	int i;
-	for (i=0; i<sp->amount; i++) {
+	for (i=0; i<amount; i++) {
 		if (!sp->ps[i].life) continue;
 		glColor4f(color[0], color[1], color[2],
 					(float)sp->ps[i].life / (float)sp->ps[i].lifefull);

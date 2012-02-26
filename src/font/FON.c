@@ -45,15 +45,25 @@ FON_Text * FON_gettext(const char * str, int r, int g, int b)
 	else assert(!"Unknown surface format.");
 
 	CREATE(FON_Text, txt);
+	txt->realw = text->w;
+	txt->realh = text->h;
 	for (txt->w=1; txt->w < text->w; txt->w<<=1);
 	for (txt->h=1; txt->h < text->h; txt->h<<=1);
+	unsigned char * px = calloc(clr_cnt, txt->w * txt->h);
+
+	int x, y, i;
+	for (y=0; y<text->h; y++)
+		for (x=0; x<text->w; x++)
+			for (i=0; i<clr_cnt; i++)
+				px[(y*txt->w + x)*clr_cnt + i] =
+			((unsigned char *)text->pixels)[(y*text->w + x)*clr_cnt + i];
 
 	glGenTextures(1, &txt->tex);
 	glBindTexture(GL_TEXTURE_2D, txt->tex);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
 	glTexImage2D(GL_TEXTURE_2D, 0, clr_cnt, txt->w, txt->h,
-			0, tex_fmt, GL_UNSIGNED_BYTE, text->pixels);
+			0, tex_fmt, GL_UNSIGNED_BYTE, px);
 
 	int err = glGetError();
 	if (err != GL_NO_ERROR) {
