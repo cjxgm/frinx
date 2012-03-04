@@ -12,14 +12,9 @@ Just type:
 
 	w,s,a,d			move
 	LEFT, RIGHT		turn
-	SPACE			set target2 here
 	ESC				quit
 
 ## License
 All the codes are licensed under GPLv2 while all the artworks are licensed
 under CC-BY-SA 3.0 Unported.
-
-## Known Issues
-* Collision detection cannot work
-* Staff is too slow.
 
