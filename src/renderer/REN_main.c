@@ -22,13 +22,6 @@ static CAM_Camera   cam = {
 	2				// dist
 };
 
-//// PHYSICS
-static OBJ_Object      mesh;
-static PHYS_ConStick * cons;
-static int			   cons_cnt;
-static OBJ_Coord     * oldco;
-static float           target[3];
-
 static void setup_3d()
 {
 	glMatrixMode(GL_PROJECTION);
@@ -74,56 +67,6 @@ void REN_main_init()
 
 	obj = MAN_res_loadobj("city");
 	music = MAN_res_loadsnd("intro");
-
-///////// INIT PHYSICS ////////
-#define VS		30
-#define CO(X,Z)	((Z)*VS+(X))
-
-	mesh.vs_cnt = VS*VS;
-	mesh.fs_cnt = 2*(VS-1)*(VS-1);
-	cons_cnt    = 2*VS*(VS-1);
-	mesh.vs = malloc(sizeof(OBJ_Coord)*mesh.vs_cnt);
-	oldco   = malloc(sizeof(OBJ_Coord)*mesh.vs_cnt);
-	mesh.fs = malloc(sizeof(OBJ_Face )*mesh.fs_cnt);
-	mesh.ns = malloc(sizeof(OBJ_Coord)*mesh.fs_cnt);
-	cons    = malloc(sizeof(PHYS_ConStick)*cons_cnt);
-
-	float sss = 1.5f / VS;
-	int x, z;
-	int fid = 0, cid = 0;	// face id; cons id
-	for (z=0; z<VS; z++)
-		for (x=0; x<VS; x++) {
-			// generate vertex
-			mesh.vs[CO(x, z)].co[0] = x*sss;
-			mesh.vs[CO(x, z)].co[1] = 1;
-			mesh.vs[CO(x, z)].co[2] = z*sss;
-			vec_cpy(oldco[CO(x, z)].co, mesh.vs[CO(x, z)].co);
-			// generate face
-			if (z < VS-1 && x < VS-1) {
-				mesh.fs[fid].id[0] = CO(x, z);
-				mesh.fs[fid].id[1] = CO(x+1, z+1);
-				mesh.fs[fid].id[2] = CO(x+1, z);
-				fid++;
-				mesh.fs[fid].id[0] = CO(x, z);
-				mesh.fs[fid].id[1] = CO(x, z+1);
-				mesh.fs[fid].id[2] = CO(x+1, z+1);
-				fid++;
-			}
-			// generate cons
-			if (x < VS-1) {
-				cons[cid].node[0] = mesh.vs[CO(x, z)].co;
-				cons[cid].node[1] = mesh.vs[CO(x+1, z)].co;
-				cons[cid].len = sss;
-				cid++;
-			}
-			if (z < VS-1) {
-				cons[cid].node[0] = mesh.vs[CO(x, z)].co;
-				cons[cid].node[1] = mesh.vs[CO(x, z+1)].co;
-				cons[cid].len = sss;
-				cid++;
-			}
-		}
-/////// INIT PHYSICS END //////
 
 	setup_3d();
 	KE_time_reset();
@@ -171,9 +114,6 @@ static void proc_key()
 	}
 	if (WM_key[WM_KEY_DOWN])
 		cam.dist += 3*KE_spf;
-	
-	if (WM_key[' '])
-		vec_cpy(target, cam.target);
 }
 
 void REN_main()
@@ -193,54 +133,6 @@ void REN_main()
 		FX_sparti_calc(sp);
 
 		glEnable(GL_LIGHTING);
-
-///////// PHYSICS ////////
-		int i, j;
-#define PREC	3
-//// APPLY
-		float force[3] = {0, -5, 0};
-		for (i=0; i<mesh.vs_cnt; i++)
-			PHYS_verlet_apply(mesh.vs[i].co, oldco[i].co, force);
-
-		for (j=0; j<PREC; j++) {
-			for (i=0; i<mesh.vs_cnt; i++) {
-				/*
-				if (mesh.vs[i].co[1] < -0.7)
-					mesh.vs[i].co[1] = -0.7;
-				*/
-				PHYS_collide(mesh.vs[i].co, oldco[i].co, obj);
-			}
-			for (i=0; i<cons_cnt; i++)
-				PHYS_con_stick_apply(&cons[i]);
-			mesh.vs[mesh.vs_cnt>>1].co[1] = 0.6;
-			vec_cpy(mesh.vs[0].co, target);
-			vec_cpy(mesh.vs[mesh.vs_cnt-1].co, cam.target);
-		}
-//// DRAW
-		glBegin(GL_TRIANGLES);
-		for (i=0; i<mesh.fs_cnt; i++) {
-			// normal
-			float v[3][3];
-			vec_sub(v[0], mesh.vs[mesh.fs[i].id[1]].co,
-						  mesh.vs[mesh.fs[i].id[0]].co);
-			vec_sub(v[1], mesh.vs[mesh.fs[i].id[2]].co,
-						  mesh.vs[mesh.fs[i].id[0]].co);
-
-			vec_unit_normal(v[2], v[0], v[1]);
-			glNormal3fv(v[2]);
-			glVertex3fv(mesh.vs[mesh.fs[i].id[0]].co);
-			glVertex3fv(mesh.vs[mesh.fs[i].id[1]].co);
-			glVertex3fv(mesh.vs[mesh.fs[i].id[2]].co);
-
-			vec_unit_normal(v[2], v[1], v[0]);
-			glNormal3fv(v[2]);
-			glVertex3fv(mesh.vs[mesh.fs[i].id[2]].co);
-			glVertex3fv(mesh.vs[mesh.fs[i].id[1]].co);
-			glVertex3fv(mesh.vs[mesh.fs[i].id[0]].co);
-		}
-		glEnd();
-/////// PHYSICS END //////
-
 		glEnable(GL_TEXTURE_2D);
 		OBJ_draw(obj);
 	} glPopMatrix();
