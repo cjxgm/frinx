@@ -1,8 +1,7 @@
-# FrinX Game Engine - For GTA-Like Games (Physics Test)
+# FrinX Game Engine - Open Source GTA-like Game Engine
+**This project is still in early alpha stage.**
 
-## Cloth Physics Test Done!!!
-Try it now!
-
+## Try It Now!
 ### Compiling
 Just type:
 
@@ -10,9 +9,9 @@ Just type:
 
 ### Controlls
 
-	w,s,a,d			move
-	LEFT, RIGHT		turn
-	ESC				quit
+	w,s,a,d         move
+	LEFT, RIGHT     turn
+	ESC             quit
 
 ## License
 All the codes are licensed under GPLv2 while all the artworks are licensed
