@@ -67,6 +67,8 @@ int WM_create(int w, int h, const char * title)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	SDL_WM_GrabInput(SDL_GRAB_ON);
+
 	return 0;
 }
 
@@ -103,5 +105,10 @@ void WM_mainloop()
 void WM_swap()
 {
 	SDL_GL_SwapBuffers();
+}
+
+void WM_get_relative_mouse_pos(int * x, int * y)
+{
+	SDL_GetRelativeMouseState(x, y);
 }
 

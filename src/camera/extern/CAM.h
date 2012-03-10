@@ -2,19 +2,13 @@
 #ifndef __CAM_H__
 #define __CAM_H__
 
-typedef struct CAM_Camera
-{
-	float target[3];
-	float forward[3];
-	float up[3];
-	float dist;
-}
-CAM_Camera;
+extern float CAM_target[3];
+extern float CAM_forward[3];
+extern float CAM_up[3];
+extern float CAM_dist;
 
-void CAM_apply(CAM_Camera * cam);
-//void CAM_turnx(CAM_Camera * cam, float a);
-void CAM_turny(CAM_Camera * cam, float a);
-//void CAM_turnz(CAM_Camera * cam, float a);
+void CAM_apply();
+void CAM_rotate(float ax, float ay, float az);
 
 #endif
 

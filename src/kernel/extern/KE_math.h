@@ -4,7 +4,7 @@
 
 #include "../vector.h"
 #include "../bezier.h"
-#include "../interp.h"
+#include "../mathmisc.h"
 
 #endif
 

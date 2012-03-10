@@ -12,15 +12,8 @@
 #include <GL/glu.h>
 #include <stdlib.h>
 
-static FX_SParti  * sp;
 static OBJ_Object * obj;
 static SND_Music  * music;
-static CAM_Camera   cam = {
-	{ 0, 0, 0 },	// target
-	{ 0, 0, -1 },	// forward
-	{ 0, 1, 0 },	// up
-	2				// dist
-};
 
 static void setup_3d()
 {
@@ -60,11 +53,6 @@ static void setup_3d()
 
 void REN_main_init()
 {
-	sp = FX_sparti_new(1000);
-	float v[] = {0, 10, 5};
-	float p[] = {0, 0, -10};
-	FX_sparti_init(sp, v, v, p, 2000, 1000, 10, 10, 0, 1000);
-
 	obj = MAN_res_loadobj("city");
 	music = MAN_res_loadsnd("intro");
 
@@ -80,40 +68,38 @@ static void proc_key()
 	else if (wait_release)
 		KE_SET_RENDERER(staff);
 
+	float fwd[3] = {CAM_forward[0], 0, CAM_forward[2]};
+	vec_normv(fwd);
 	if (WM_key['w']) {
-		cam.target[0] += cam.forward[0] * 3*KE_spf;
+		CAM_target[0] += fwd[0] * 3*KE_spf;
 		/* DO NOT MOVE UP */
-		cam.target[2] += cam.forward[2] * 3*KE_spf;
+		CAM_target[2] += fwd[2] * 3*KE_spf;
 	}
 	if (WM_key['s']) {
-		cam.target[0] -= cam.forward[0] * 3*KE_spf;
+		CAM_target[0] -= fwd[0] * 3*KE_spf;
 		/* DO NOT MOVE DOWN */
-		cam.target[2] -= cam.forward[2] * 3*KE_spf;
+		CAM_target[2] -= fwd[2] * 3*KE_spf;
 	}
 	if (WM_key['a']) {
 		float right[3];
-		vec_unit_normal(right, cam.forward, cam.up);
-		cam.target[0] -= right[0] * 3*KE_spf;
+		vec_unit_normal(right, CAM_forward, CAM_up);
+		CAM_target[0] -= right[0] * 3*KE_spf;
 		/* DO NOT MOVE DOWN */
-		cam.target[2] -= right[2] * 3*KE_spf;
+		CAM_target[2] -= right[2] * 3*KE_spf;
 	}
 	if (WM_key['d']) {
 		float right[3];
-		vec_unit_normal(right, cam.forward, cam.up);
-		cam.target[0] += right[0] * 3*KE_spf;
+		vec_unit_normal(right, CAM_forward, CAM_up);
+		CAM_target[0] += right[0] * 3*KE_spf;
 		/* DO NOT MOVE DOWN */
-		cam.target[2] += right[2] * 3*KE_spf;
+		CAM_target[2] += right[2] * 3*KE_spf;
 	}
-	if (WM_key[WM_KEY_LEFT])
-		CAM_turny(&cam, +2*KE_spf);
-	if (WM_key[WM_KEY_RIGHT])
-		CAM_turny(&cam, -2*KE_spf);
-	if (WM_key[WM_KEY_UP]) {
-		cam.dist -= 3*KE_spf;
-		if (cam.dist < 0.1) cam.dist = 0.1;
+
+	/* mouse */{
+		int x, y;
+		WM_get_relative_mouse_pos(&x, &y);
+		CAM_rotate(0.2f*y, -0.2f*x, 0);
 	}
-	if (WM_key[WM_KEY_DOWN])
-		cam.dist += 3*KE_spf;
 }
 
 void REN_main()
@@ -123,14 +109,7 @@ void REN_main()
 		SND_playmusic(music);
 
 	glPushMatrix(); {
-		CAM_apply(&cam);
-
-		glDisable(GL_LIGHTING);
-		glDisable(GL_TEXTURE_2D);
-		glPointSize(10);
-		float color[] = {1.0, 0.8, 0.0};
-		FX_sparti_draw(sp, color);
-		FX_sparti_calc(sp);
+		CAM_apply();
 
 		glEnable(GL_LIGHTING);
 		glEnable(GL_TEXTURE_2D);
