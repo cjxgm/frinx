@@ -21,7 +21,10 @@ void vec_norm(float vd[3], float v[3]);
 void vec_normv(float vd[3]);
 
 void vec_unit_normal(float vd[3], float v1[3], float v2[3]);
+void vec_unit_normal_3p(float vd[3], float p1[3], float p2[3], float p3[3]);
 void vec_cpy(float vd[3], float v[3]);
+
+void vec_lirp(float vd[3], float ratio, float df[3], float dt[3]);
 
 #endif
 

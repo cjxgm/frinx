@@ -1,38 +1,185 @@
+################################################
+#
 # FrinX Object Exporter
-# by eXerigumo Clanjor
-# Copyright 2010-2012, licensed under GPLv2.
+# For FrinX 0.17 or later version.
+#
+# Copyright (C) eXerigumo Clanjor, 2010-2012.
+# Licensed under GPLv2. ABSOLUTELY NO WARRANTY!
+#
 
-###### CONFIG ######
-OUTPUT_FILE = "/tmp/test.fxo"
 
-###### DON'T MODIFY CODES BELOW UNLESS YOU KNOW WHAT YOU'RE DOING! ######
+########################################
+#
+# User Configuration
+#
+
+OUTPUT_FILE = "/tmp/object.fo"
+FRAME_STEP  = 10
+
+
+
+#############################################
+#      DON'T MODIFY CODES BELOW UNLESS      #
+#        YOU KNOW WHAT YOU'RE DOING!        #
+#############################################
 
 import bpy;
 from struct import *
 
-def fx_export(file):
-	def export_mesh(m):
-		# export vertices
-		file.write(pack("H", len(m.vertices)))
-		for v in m.vertices:
-			file.write(pack("fff", v.co[0], v.co[1], v.co[2]))
+########################################
+#
+# Error Prompt
+#
 
-		# export faces
+class MenuShowError(bpy.types.Menu):
+	bl_label = "Error"
+	bl_idname = "OBJECT_MT_menu_show_error"
+
+	def draw(self, context):
+		layout = self.layout
+
+		lines = self.msg.split("\n");
+		showIcon = True
+		for line in lines:
+			if showIcon:
+				layout.label(text=line, icon='ERROR')
+				showIcon = False
+			else:
+				layout.label(text=line)
+			
+
+def showError(msg):
+	MenuShowError.msg = msg;
+	bpy.utils.register_class(MenuShowError)
+	bpy.ops.wm.call_menu(name=MenuShowError.bl_idname)
+	bpy.utils.unregister_class(MenuShowError)
+
+########################################
+#
+# Exporter
+#
+
+def fx_export(file):
+	meshes  = bpy.data.meshes
+	arms    = bpy.data.armatures
+	objects = bpy.data.objects
+	actions = bpy.data.actions
+	scene   = bpy.context.scene
+
+
+	def reallen(d):
+		cnt = 0
+		for i in d:
+			if i.users > 0:		# exclude deleted datas
+				cnt += 1
+		return cnt
+
+
+	def export_face(m):
 		file.write(pack("H", len(m.faces)))
 		for f in m.faces:
 			if len(f.vertices) != 3:
-				raise ValueError("Must only contain triangular faces!") 
+				showError("Must only contain triangular faces!\n"\
+							"It is: " + str(list(f.vertices)))
+				return
 			# face triangle vertices id
 			file.write(pack("HHH", f.vertices[0], f.vertices[1], f.vertices[2]))
 			# uv coordinates
+			if len(m.uv_textures) == 0:
+				showError("Must have a UV texture!")
+				return
 			uv = m.uv_textures[0].data[f.index].uv_raw
 			for i in range(6):
 				file.write(pack("f", uv[i]))
 
+
+	def export_action(ob, arm, act, frame_time):
+		set_to_static_action(arm)
+
+		act_start, act_end = act.frame_range
+		act_start = int(act_start)
+		act_end   = int(act_end)
+		frame_cnt = int((act_end - act_start) / FRAME_STEP) + 1
+
+		# write action name
+		file.write(convert_string(act.name))
+
+		# write frame count
+		file.write(pack("B", frame_cnt))
+
+		# the real staff...
+		arm.animation_data.action = act
+		for i in range(act_start, act_end, FRAME_STEP):
+			scene.frame_set(i)
+			m = ob.to_mesh(scene, True, 'PREVIEW')
+			for v in m.vertices:
+				# note that i have switched the y- and z-axis.
+				file.write(pack("fff", v.co[0], -v.co[2], v.co[1]))
+			meshes.remove(m)
+
+
+	def set_to_static_action(arm):
+		arm.animation_data.action = actions['static']
+		scene.frame_set(actions['static'].frame_range[0])
+
+
+	def convert_string(s):
+		rv = pack('B', len(s))
+		for ch in s:
+			rv += bytes(ch, encoding="utf8")
+		return rv
+
+
+	def get_ob_by_type(t):
+		for ob in bpy.data.objects:
+			if ob.type == t \
+			and ob.users > 0:		# exclude deleted objects
+				return ob
+
+
+	# only support one mesh
+	# XXX, exclude collision boundary mesh
+	if reallen(meshes) != 1:
+		showError("There must be one (and only one) mesh!");
+		return
+	# only support one armature
+	if reallen(arms) != 1:
+		showError("There must be one (and only one) armature!");
+		return
+
+	# there must be at least a "static" action,
+	# or no vertices data will be exported, which
+	# is sure to cause error.
+	if actions.find("static") == -1 \
+	or actions["static"].users == 0:
+		showError("There must be a \"static\" action!");
+		return
+
+	# pre-exporting-checking done, open file for exporting
 	file = open(file, "wb")
-	file.write(pack("B", len(bpy.data.meshes)))
-	for mesh in bpy.data.meshes:
-		export_mesh(mesh)
+
+	ob  = get_ob_by_type('MESH')
+	arm = get_ob_by_type('ARMATURE')
+	
+	# XXX, exclude collision boundary mesh
+	export_face(ob.data)
+
+	# write vertices count
+	file.write(pack("H", len(ob.data.vertices)))
+
+	# write frame time
+	frame_time = int(1000 / scene.render.fps / scene.render.fps_base)
+	file.write(pack("H", FRAME_STEP * frame_time))
+
+	# write action count
+	file.write(pack("B", reallen(actions)))
+
+	for act in actions:
+		if act.users > 0:
+			export_action(ob, arm, act, frame_time)
+
+	#set_to_static_action(arm)
+
 	file.close()
 
 fx_export(OUTPUT_FILE);

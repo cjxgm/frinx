@@ -10,16 +10,7 @@ OBJ_Object * OBJ_fo_load(const char * file)
 	if (!fp) return NULL;
 
 	CREATE(OBJ_Object, obj);
-	int i;
-
-	unsigned char mesh_cnt;
-	READ(mesh_cnt, fp);
-	assert(mesh_cnt == 1 && "Only supports ONE mesh in one object now.");
-
-	// read vertices
-	READ(obj->vs_cnt, fp);
-	obj->vs = malloc(sizeof(OBJ_Coord) * obj->vs_cnt);
-	READ_ARRAY(obj->vs, obj->vs_cnt, fp);
+	int i, j;
 
 	// read faces
 	READ(obj->fs_cnt, fp);
@@ -32,18 +23,35 @@ OBJ_Object * OBJ_fo_load(const char * file)
 		obj->fs[i].uv[1][1] = 1.0f - obj->fs[i].uv[1][1];
 		obj->fs[i].uv[2][1] = 1.0f - obj->fs[i].uv[2][1];
 	}
-	// calculate normals
-	obj->ns = malloc(sizeof(OBJ_Coord) * obj->fs_cnt);
-	for (i=0; i<obj->fs_cnt; i++) {
-		float v[2][3];
-		vec_sub(v[0], obj->vs[obj->fs[i].id[1]].co,
-					  obj->vs[obj->fs[i].id[0]].co);
-		vec_sub(v[1], obj->vs[obj->fs[i].id[2]].co,
-					  obj->vs[obj->fs[i].id[0]].co);
-		vec_unit_normal(obj->ns[i].co, v[0], v[1]);
+
+	// read actions
+	READ(obj->vs_cnt, fp);
+	READ(obj->tpf, fp);
+	READ(obj->as_cnt, fp);
+	obj->as = malloc(sizeof(OBJ_Action) * obj->as_cnt);
+	for (i=0; i<obj->as_cnt; i++) {
+		OBJ_Action * act = &obj->as[i];
+		// read name
+		unsigned char namelen;
+		READ(namelen, fp);
+		act->name = malloc(namelen + 1);
+		READ_ARRAY(act->name, namelen, fp);
+		act->name[namelen] = 0;
+
+		// read frames
+		READ(act->frame_cnt, fp);
+		act->frames = malloc(sizeof(OBJ_Frame) * act->frame_cnt);
+		for (j=0; j<act->frame_cnt; j++) {
+			// read vertices
+			act->frames[j].vs = malloc(sizeof(OBJ_Coord) * obj->vs_cnt);
+			READ_ARRAY(act->frames[j].vs, obj->vs_cnt, fp);
+		}
 	}
 
+
 	fclose(fp);
+
+	OBJ_stopanim(obj);
 	return obj;
 }
 

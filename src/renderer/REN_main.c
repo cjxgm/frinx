@@ -53,7 +53,7 @@ static void setup_3d()
 
 void REN_main_init()
 {
-	obj = MAN_res_loadobj("city");
+	obj = MAN_res_loadobj("anim");
 	music = MAN_res_loadsnd("intro");
 
 	setup_3d();
@@ -94,6 +94,8 @@ static void proc_key()
 		/* DO NOT MOVE DOWN */
 		CAM_target[2] += right[2] * 3*KE_spf;
 	}
+	if (WM_key[' '])
+		OBJ_playanim(obj, "walk");
 
 	/* mouse */{
 		int x, y;

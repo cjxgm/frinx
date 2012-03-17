@@ -6,6 +6,7 @@
 
 void PHYS_collide(float pos[3], float oldpos[3], OBJ_Object * obj)
 {
+	/* FIXME:
 	float cp[3];
 	int i;
 
@@ -15,11 +16,10 @@ void PHYS_collide(float pos[3], float oldpos[3], OBJ_Object * obj)
 								 obj->vs[obj->fs[i].id[2]].co,
 								 pos, oldpos, cp)) {
 			vec_cpy(pos, cp);
-			//pos[1]+=1;
-			//pos[1] = 1;
-			printf("%g  %g   %g\n", cp[0], cp[1], cp[2]);
+			vec_cpy(oldpos, cp);
 		}
 	}
+	*/
 }
 
 int  PHYS_collide_tri_seg(

@@ -135,6 +135,13 @@ void vec_normv(float vd[3])
  * Calculate the unit-length normal of a surface, which is the vector
  * perpendicular to the surface constructed by v1> and v2>.
  *
+ * vec_unit_normal_3p(vd, p1, p2, p3)
+ * 		vec_unit_normal(vd>, p2> - p1>, p3> - p1>)
+ *
+ * Calculate the unit-length normal of a surface, which is the vector
+ * perpendicular to the surface constructed by 3 points.
+ *
+ *
  * vec_cpy(vd, v)
  * 		vd> = v>
  */
@@ -144,10 +151,32 @@ void vec_unit_normal(float vd[3], float v1[3], float v2[3])
 	vec_normv(vd);
 }
 
+void vec_unit_normal_3p(float vd[3], float p1[3], float p2[3], float p3[3])
+{
+	float v[2][3];
+	vec_sub(v[0], p2, p1);
+	vec_sub(v[1], p3, p1);
+	vec_unit_normal(vd, v[0], v[1]);
+}
+
 void vec_cpy(float vd[3], float v[3])
 {
 	vd[0] = v[0];
 	vd[1] = v[1];
 	vd[2] = v[2];
+}
+
+
+/* vec_lirp(vd, ratio, df, dt)
+ * 		vd> = (1-ratio) * df> + ratio * dt>
+ *
+ * Vector linear interpolation. The larger ratio is, the more dt is.
+ */
+void vec_lirp(float vd[3], float ratio, float df[3], float dt[3])
+{
+	float v[2][3];
+	vec_mul(v[0], df, 1-ratio);
+	vec_mul(v[1], dt,   ratio);
+	vec_add(vd, v[0], v[1]);
 }
 
