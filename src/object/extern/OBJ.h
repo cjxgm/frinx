@@ -42,6 +42,7 @@ typedef struct OBJ_Object
 
 
 	////// only exist in memory
+	float pos[3], rot[3];	// position and rotation
 	unsigned int   tex;		// texture
 	// animation data
 	long time_begin;		// when did the animation began?
@@ -49,10 +50,17 @@ typedef struct OBJ_Object
 }
 OBJ_Object;
 
+
+
+
 void OBJ_free(OBJ_Object * obj);
 void OBJ_draw(OBJ_Object * obj);
+
 void OBJ_playanim(OBJ_Object * obj, const char * name);
 void OBJ_stopanim(OBJ_Object * obj);
+
+// determine if a given animation is now playing
+int  OBJ_isanim(OBJ_Object * obj, const char * name);
 
 #endif
 

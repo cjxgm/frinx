@@ -83,3 +83,8 @@ void OBJ_stopanim(OBJ_Object * obj)
 	OBJ_playanim(obj, "static");
 }
 
+int OBJ_isanim(OBJ_Object * obj, const char * name)
+{
+	return !strcmp(obj->as[obj->anim_playing].name, name);
+}
+

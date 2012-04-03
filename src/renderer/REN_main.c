@@ -13,6 +13,7 @@
 #include <stdlib.h>
 
 static OBJ_Object * obj;
+static OBJ_Object * player;
 static SND_Music  * music;
 
 static void setup_3d()
@@ -55,7 +56,12 @@ static void setup_3d()
 void REN_main_init()
 {
 	obj = MAN_res_loadobj("city");
+	player = MAN_res_loadobj("player1");
 	music = MAN_res_loadsnd("intro");
+
+	// fix player's position
+	vec_cpy(player->pos, CAM_target);
+	player->pos[1] = 0.38;
 
 	setup_3d();
 	KE_time_reset();
@@ -69,46 +75,67 @@ static void proc_key()
 	else if (wait_release)
 		KE_SET_RENDERER(staff);
 
-	float fwd[3] = {CAM_forward[0], 0, CAM_forward[2]};
-	vec_normv(fwd);
-	float newpos[3];
-	vec_cpy(newpos, CAM_target);
-	if (WM_key['w']) {
-		newpos[0] += fwd[0] * 20*KE_spf;
-		/* DO NOT MOVE UP */
-		newpos[2] += fwd[2] * 20*KE_spf;
-		PHYS_collide(newpos, CAM_target, obj);
-		vec_cpy(CAM_target, newpos);
+	if (WM_key['w'] || WM_key['s'] || WM_key['a'] || WM_key['d']) {
+		float fwd[3] = {CAM_forward[0], 0, CAM_forward[2]};
+		vec_normv(fwd);
+		float newpos[3];
+		vec_cpy(newpos, CAM_target);
+
+		if (WM_key['w']) {
+			newpos[0] += fwd[0] * 10*KE_spf;
+			/* DO NOT MOVE UP */
+			newpos[2] += fwd[2] * 10*KE_spf;
+			PHYS_collide(newpos, CAM_target, obj);
+			vec_cpy(CAM_target, newpos);
+			vec_cpy(player->rot, CAM_rot);
+			if (!OBJ_isanim(player, "walk"))
+				OBJ_playanim(player, "walk");
+		}
+
+		if (WM_key['s']) {
+			newpos[0] -= fwd[0] * 20*KE_spf;
+			/* DO NOT MOVE DOWN */
+			newpos[2] -= fwd[2] * 20*KE_spf;
+			PHYS_collide(newpos, CAM_target, obj);
+			vec_cpy(CAM_target, newpos);
+			vec_cpy(player->rot, CAM_rot);
+			player->rot[1] -= 180;
+			if (!OBJ_isanim(player, "walk"))
+				OBJ_playanim(player, "walk");
+		}
+
+		if (WM_key['a']) {
+			float right[3];
+			vec_unit_normal(right, CAM_forward, CAM_up);
+			newpos[0] -= right[0] * 20*KE_spf;
+			/* DO NOT MOVE DOWN */
+			newpos[2] -= right[2] * 20*KE_spf;
+			PHYS_collide(newpos, CAM_target, obj);
+			vec_cpy(CAM_target, newpos);
+			vec_cpy(player->rot, CAM_rot);
+			player->rot[1] += 90;
+			if (!OBJ_isanim(player, "walk"))
+				OBJ_playanim(player, "walk");
+		}
+
+		if (WM_key['d']) {
+			float right[3];
+			vec_unit_normal(right, CAM_forward, CAM_up);
+			newpos[0] += right[0] * 20*KE_spf;
+			/* DO NOT MOVE DOWN */
+			newpos[2] += right[2] * 20*KE_spf;
+			PHYS_collide(newpos, CAM_target, obj);
+			vec_cpy(CAM_target, newpos);
+			vec_cpy(player->rot, CAM_rot);
+			player->rot[1] -= 90;
+			if (!OBJ_isanim(player, "walk"))
+				OBJ_playanim(player, "walk");
+		}
+
+		vec_cpy(player->pos, CAM_target);
+		player->pos[1] = 0.38;
 	}
-	if (WM_key['s']) {
-		newpos[0] -= fwd[0] * 20*KE_spf;
-		/* DO NOT MOVE DOWN */
-		newpos[2] -= fwd[2] * 20*KE_spf;
-		PHYS_collide(newpos, CAM_target, obj);
-		vec_cpy(CAM_target, newpos);
-	}
-	if (WM_key['a']) {
-		float right[3];
-		vec_unit_normal(right, CAM_forward, CAM_up);
-		newpos[0] -= right[0] * 20*KE_spf;
-		/* DO NOT MOVE DOWN */
-		newpos[2] -= right[2] * 20*KE_spf;
-		PHYS_collide(newpos, CAM_target, obj);
-		vec_cpy(CAM_target, newpos);
-	}
-	if (WM_key['d']) {
-		float right[3];
-		vec_unit_normal(right, CAM_forward, CAM_up);
-		newpos[0] += right[0] * 20*KE_spf;
-		/* DO NOT MOVE DOWN */
-		newpos[2] += right[2] * 20*KE_spf;
-		PHYS_collide(newpos, CAM_target, obj);
-		vec_cpy(CAM_target, newpos);
-	}
-	/*
-	if (WM_key[' '])
-		OBJ_playanim(obj, "walk");
-	*/
+	else OBJ_stopanim(player);
 
 	/* mouse */{
 		int x, y;
@@ -125,6 +152,13 @@ static void draw()
 		glEnable(GL_LIGHTING);
 		glEnable(GL_TEXTURE_2D);
 		OBJ_draw(obj);
+		glPushMatrix(); {
+			glTranslatef(player->pos[0], player->pos[1], player->pos[2]);
+			glRotatef(player->rot[2], 0, 0, 1);
+			glRotatef(player->rot[1], 0, 1, 0);
+			glScalef(0.08, 0.08, 0.08);
+			OBJ_draw(player);
+		} glPopMatrix();
 	} glPopMatrix();
 }
 

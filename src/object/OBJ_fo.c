@@ -51,6 +51,9 @@ OBJ_Object * OBJ_fo_load(const char * file)
 
 	fclose(fp);
 
+	obj->pos[0] = obj->pos[1] = obj->pos[2] = 0;
+	obj->rot[0] = obj->rot[1] = obj->rot[2] = 0;
+
 	OBJ_stopanim(obj);
 	return obj;
 }
