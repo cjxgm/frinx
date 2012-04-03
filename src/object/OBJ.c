@@ -74,13 +74,12 @@ void OBJ_playanim(OBJ_Object * obj, const char * name)
 			break;
 	assert(i != obj->as_cnt || "Action not found.");
 
-	OBJ_stopanim(obj);
 	obj->anim_playing = i;
+	obj->time_begin = KE_time_get();
 }
 
 void OBJ_stopanim(OBJ_Object * obj)
 {
-	obj->anim_playing = -1;
-	obj->time_begin = KE_time_get();
+	OBJ_playanim(obj, "static");
 }
 

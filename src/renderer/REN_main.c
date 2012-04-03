@@ -19,8 +19,9 @@ static void setup_3d()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (float)WM_winw / 2.0 / (float)WM_winh, 1, 100);
+	gluPerspective(45.0f, (float)WM_winw / 2.0 / (float)WM_winh, 1, 1000);
 	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
@@ -53,7 +54,7 @@ static void setup_3d()
 
 void REN_main_init()
 {
-	obj = MAN_res_loadobj("anim");
+	obj = MAN_res_loadobj("city");
 	music = MAN_res_loadsnd("intro");
 
 	setup_3d();
@@ -70,32 +71,44 @@ static void proc_key()
 
 	float fwd[3] = {CAM_forward[0], 0, CAM_forward[2]};
 	vec_normv(fwd);
+	float newpos[3];
+	vec_cpy(newpos, CAM_target);
 	if (WM_key['w']) {
-		CAM_target[0] += fwd[0] * 3*KE_spf;
+		newpos[0] += fwd[0] * 20*KE_spf;
 		/* DO NOT MOVE UP */
-		CAM_target[2] += fwd[2] * 3*KE_spf;
+		newpos[2] += fwd[2] * 20*KE_spf;
+		PHYS_collide(newpos, CAM_target, obj);
+		vec_cpy(CAM_target, newpos);
 	}
 	if (WM_key['s']) {
-		CAM_target[0] -= fwd[0] * 3*KE_spf;
+		newpos[0] -= fwd[0] * 20*KE_spf;
 		/* DO NOT MOVE DOWN */
-		CAM_target[2] -= fwd[2] * 3*KE_spf;
+		newpos[2] -= fwd[2] * 20*KE_spf;
+		PHYS_collide(newpos, CAM_target, obj);
+		vec_cpy(CAM_target, newpos);
 	}
 	if (WM_key['a']) {
 		float right[3];
 		vec_unit_normal(right, CAM_forward, CAM_up);
-		CAM_target[0] -= right[0] * 3*KE_spf;
+		newpos[0] -= right[0] * 20*KE_spf;
 		/* DO NOT MOVE DOWN */
-		CAM_target[2] -= right[2] * 3*KE_spf;
+		newpos[2] -= right[2] * 20*KE_spf;
+		PHYS_collide(newpos, CAM_target, obj);
+		vec_cpy(CAM_target, newpos);
 	}
 	if (WM_key['d']) {
 		float right[3];
 		vec_unit_normal(right, CAM_forward, CAM_up);
-		CAM_target[0] += right[0] * 3*KE_spf;
+		newpos[0] += right[0] * 20*KE_spf;
 		/* DO NOT MOVE DOWN */
-		CAM_target[2] += right[2] * 3*KE_spf;
+		newpos[2] += right[2] * 20*KE_spf;
+		PHYS_collide(newpos, CAM_target, obj);
+		vec_cpy(CAM_target, newpos);
 	}
+	/*
 	if (WM_key[' '])
 		OBJ_playanim(obj, "walk");
+	*/
 
 	/* mouse */{
 		int x, y;

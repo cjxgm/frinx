@@ -114,7 +114,7 @@ def fx_export(file):
 			m = ob.to_mesh(scene, True, 'PREVIEW')
 			for v in m.vertices:
 				# note that i have switched the y- and z-axis.
-				file.write(pack("fff", v.co[0], -v.co[2], v.co[1]))
+				file.write(pack("fff", v.co[0], v.co[2], -v.co[1]))
 			meshes.remove(m)
 
 

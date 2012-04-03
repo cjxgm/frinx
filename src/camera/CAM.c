@@ -6,7 +6,7 @@
 
 static float m[16];
 static float rx=0, ry=0, rz=0;
-float CAM_target[3] = {0, 0, 0};
+float CAM_target[3] = {20, 3, 0};
 float CAM_forward[3] = {0, 0, -1};
 float CAM_up[3] = {0, 1, 0};
 float CAM_dist = 2;

@@ -10,6 +10,13 @@ Please see the wiki.
 
 ## Log
 
+**2012-04-03** 0.17
+
+* + naked-eye 3d!
+* + city
+* + camera collision
+* @ fixed several bugs
+
 **2012-03-17** 0.17
 
 * @ redesigned frinx object file format for animation

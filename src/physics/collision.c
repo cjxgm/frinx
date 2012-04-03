@@ -6,20 +6,21 @@
 
 void PHYS_collide(float pos[3], float oldpos[3], OBJ_Object * obj)
 {
-	/* FIXME:
 	float cp[3];
 	int i;
 
+	OBJ_stopanim(obj);
+	OBJ_Coord * vs = obj->as[obj->anim_playing].frames[0].vs;
+
 	for (i=0; i<obj->fs_cnt; i++) {
-		if (PHYS_collide_tri_seg(obj->vs[obj->fs[i].id[0]].co,
-								 obj->vs[obj->fs[i].id[1]].co,
-								 obj->vs[obj->fs[i].id[2]].co,
+		if (PHYS_collide_tri_seg(vs[obj->fs[i].id[0]].co,
+								 vs[obj->fs[i].id[1]].co,
+								 vs[obj->fs[i].id[2]].co,
 								 pos, oldpos, cp)) {
 			vec_cpy(pos, cp);
 			vec_cpy(oldpos, cp);
 		}
 	}
-	*/
 }
 
 int  PHYS_collide_tri_seg(
@@ -64,7 +65,7 @@ int  PHYS_collide_plane_seg(
 	if (a*b >= 0) return 0;
 
 	vec_sub(cp, s2, s1);
-	vec_mulv(cp, a / (a-b) + 0.5);
+	vec_mulv(cp, a / (a-b) + 0.005);
 	vec_addv(cp, s1);
 	
 	return 1;
