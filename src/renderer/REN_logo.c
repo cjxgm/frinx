@@ -68,25 +68,8 @@ static void proc_key()
 	last = WM_keydown;
 }
 
-void REN_logo()
+static void draw(int isright)
 {
-	// when playing began, reset time;
-	// when it ended, turn to main menu.
-	static int play_began = 0;
-	if (SND_is_playing()) {
-		if (!play_began) {
-			play_began = 1;
-			KE_time_reset();
-		}
-	}
-	else if (play_began) {
-		free_data();
-		KE_SET_RENDERER(main);
-	}
-	else return;
-
-	proc_key();
-
 	// logo animation
 	glPushMatrix();
 	glTranslatef(160, 360, 0);
@@ -108,7 +91,9 @@ void REN_logo()
 		glColor4f(1.0f, 0.8f, 0.0f, lirp(t, 2000, 3000, 0, 1));
 		glLineWidth(5);
 		float a = lirp(t, 2000, 3000, 6, 1);
-		glTranslatef(160, 120, 0);
+		glTranslatef(160 +
+			(1-isright*2)*(a/10-0.1),	// the naked3d staff
+			120, 0);
 		glScalef(a, a, 1);
 		glTranslatef(-160, -120, 0);
 		VG_draw(vg, 0.0f, 1.0f, 0.01f, GL_LINE_STRIP);
@@ -185,5 +170,30 @@ void REN_logo()
 	}
 
 	glPopMatrix();
+}
+
+void REN_logo()
+{
+	// when playing began, reset time;
+	// when it ended, turn to main menu.
+	static int play_began = 0;
+	if (SND_is_playing()) {
+		if (!play_began) {
+			play_began = 1;
+			KE_time_reset();
+		}
+	}
+	else if (play_began) {
+		free_data();
+		KE_SET_RENDERER(main);
+	}
+	else return;
+
+	proc_key();
+
+	glViewport(0, 0, WM_winw/2, WM_winh);
+	draw(0);
+	glViewport(WM_winw/2, 0, WM_winw/2, WM_winh);
+	draw(1);
 }
 

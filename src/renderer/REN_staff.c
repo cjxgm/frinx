@@ -66,10 +66,9 @@ void REN_staff_init()
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
 
-	glViewport(0, 0, WM_winw, WM_winh);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, WM_winw, 0, WM_winh, -1, 1);
+	glOrtho(0, WM_winw/2, 0, WM_winh, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
@@ -83,6 +82,58 @@ void REN_staff_init()
 
 	SND_playmusic(music);
 }
+
+static void draw(int isright)
+{
+	if (te + staff[sid].time < KE_time_get())
+		if (sid < LEN(staff)-1) {
+			te += staff[sid].time;
+			sid++;
+		}
+
+	glPushMatrix();
+
+	float offset = 1-2*isright;
+	float offset_title = 0;
+	float offset_item  = 0;
+
+	int rt = KE_time_get() - te;	// relative time
+	if (rt < 500) {
+		glColor4f(1, 1, 1, lirp(rt, 0, 500, 0, 1));
+		glRotatef(lirp(rt, 0, 500, 60, 0), 0, 0, 1);
+		glScalef(lirp(rt, 0, 500, 10, 1), lirp(rt, 0, 500, 0, 1), 1);
+	}
+	else if (sid != LEN(staff)-1 && (rt -= staff[sid].time) > -500) {
+		glColor4f(1, 1, 1, lirp(rt, -500, 0, 1, 0));
+		glRotatef(lirp(rt, -500, 0, 0, 60), 0, 0, 1);
+		glScalef(lirp(rt, -500, 0, 1, 0), lirp(rt, -500, 0, 1, 0), 1);
+	}
+	else {
+		glColor4f(1, 1, 1, 1);
+		offset_title = offset * lirp(rt, -staff[sid].time+500, -500, 10, 1);
+		offset_item  = offset * lirp(rt, -staff[sid].time+500, -500, 2, 15);
+	}
+
+
+	if (staff[sid].text[1]) {
+		FON_drawtext((WM_winw/2 - staff[sid].text[0]->realw)/2
+						+ offset_title,
+					 WM_winh/2 - 15,
+					 staff[sid].text[0]);
+		FON_drawtext((WM_winw/2 - staff[sid].text[1]->realw)/2
+						+ offset_item,
+					 WM_winh/2 + 15,
+					 staff[sid].text[1]);
+	}
+	else
+		FON_drawtext((WM_winw/2 - staff[sid].text[0]->realw)/2
+						+ offset_title,
+					 (WM_winh - staff[sid].text[0]->realh)/2,
+					 staff[sid].text[0]);
+
+	glPopMatrix();
+}
+
 
 void REN_staff()
 {
@@ -105,41 +156,9 @@ void REN_staff()
 	if (WM_keydown)
 		exit(0);
 
-	if (te + staff[sid].time < KE_time_get())
-		if (sid < LEN(staff)-1) {
-			te += staff[sid].time;
-			sid++;
-		}
-
-	glPushMatrix();
-
-	int rt = KE_time_get() - te;	// relative time
-	if (rt < 500) {
-		glColor4f(1, 1, 1, lirp(rt, 0, 500, 0, 1));
-		glRotatef(lirp(rt, 0, 500, 60, 0), 0, 0, 1);
-		glScalef(lirp(rt, 0, 500, 10, 1), lirp(rt, 0, 500, 0, 1), 1);
-	}
-	else if (sid != LEN(staff)-1 && (rt -= staff[sid].time) > -500) {
-		glColor4f(1, 1, 1, lirp(rt, -500, 0, 1, 0));
-		glRotatef(lirp(rt, -500, 0, 0, 60), 0, 0, 1);
-		glScalef(lirp(rt, -500, 0, 1, 0), lirp(rt, -500, 0, 1, 0), 1);
-	}
-	else glColor4f(1, 1, 1, 1);
-
-	if (staff[sid].text[1]) {
-		FON_drawtext((WM_winw - staff[sid].text[0]->realw)/2,
-					 WM_winh/2 - 15,
-					 staff[sid].text[0]);
-		FON_drawtext((WM_winw - staff[sid].text[1]->realw)/2,
-					 WM_winh/2 + 15,
-					 staff[sid].text[1]);
-	}
-	else
-		FON_drawtext((WM_winw - staff[sid].text[0]->realw)/2,
-					 (WM_winh - staff[sid].text[0]->realh)/2,
-					 staff[sid].text[0]);
-
-	glPopMatrix();
+	glViewport(0, 0, WM_winw/2, WM_winh);
+	draw(0);
+	glViewport(WM_winw/2, 0, WM_winw/2, WM_winh);
+	draw(1);
 }
-
 

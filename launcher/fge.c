@@ -6,8 +6,8 @@
 int main()
 {
 	SND_init();
-	FON_init(24);
-	WM_create(640, 480, "FrinX Game Engine");
+	FON_init(20);
+	WM_create(760, 480, "FrinX Game Engine");
 	WM_mainloop();
 
 	SND_destroy();

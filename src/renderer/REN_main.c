@@ -19,7 +19,7 @@ static void setup_3d()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (float)WM_winw / (float)WM_winh, 1, 100);
+	gluPerspective(45.0f, (float)WM_winw / 2.0 / (float)WM_winh, 1, 100);
 	glMatrixMode(GL_MODELVIEW);
 
 	glEnable(GL_CULL_FACE);
@@ -104,6 +104,17 @@ static void proc_key()
 	}
 }
 
+static void draw()
+{
+	glPushMatrix(); {
+		CAM_apply();
+
+		glEnable(GL_LIGHTING);
+		glEnable(GL_TEXTURE_2D);
+		OBJ_draw(obj);
+	} glPopMatrix();
+}
+
 void REN_main()
 {
 	proc_key();
@@ -111,11 +122,12 @@ void REN_main()
 		SND_playmusic(music);
 
 	glPushMatrix(); {
-		CAM_apply();
-
-		glEnable(GL_LIGHTING);
-		glEnable(GL_TEXTURE_2D);
-		OBJ_draw(obj);
+		glViewport(0, 0, WM_winw/2, WM_winh);
+		glTranslatef(+0.03, 0, 0);
+		draw();
+		glViewport(WM_winw/2, 0, WM_winw/2, WM_winh);
+		glTranslatef(-0.06, 0, 0);
+		draw();
 	} glPopMatrix();
 }
 
