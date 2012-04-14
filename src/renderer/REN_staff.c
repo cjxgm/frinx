@@ -28,9 +28,14 @@ static Staff staff[] = {
 	{"Engine", NULL, 2000},
 	{"Chief Programmer", "eXerigumo Clanjor(哆啦比猫/兰威举)", 3300},
 	{"Designing Leader", "eXerigumo Clanjor(哆啦比猫/兰威举)", 3300},
+	{"Artworks", NULL, 3700},
+	{"Logo Design", "Sun Kowul", 3300},
+	{"Logo Design", "Remind", 3300},
+	{"CG", "eXerigumo Clanjor(哆啦比猫/兰威举)", 3300},
 	{"Relative Services", NULL, 3700},
 	{"Web Design", "eXerigumo Clanjor(哆啦比猫/兰威举)", 2000},
 	{"Web Coding", "eXerigumo Clanjor(哆啦比猫/兰威举)", 2000},
+	{"Present", "Clanjor Productions", 2000},
 	{"Supports", NULL, 3700},
 	{"Special Thanks to", "Masta Zheng(郑志明) as our actor", 3300},
 	{"Special Thanks to", "ArchLinux", 2000},
@@ -38,8 +43,12 @@ static Staff staff[] = {
 	{"Special Thanks to", "Vim", 2000},
 	{"Special Thanks to", "SConstruct", 2000},
 	{"Special Thanks to", "OpenGL", 2000},
-	{"Special Thanks to", "SDL", 2000},
+	{"Special Thanks to", "SDL, SDL_mixer, SDL_image, SDL_ttf", 2000},
+	{"Special Thanks to", "FreeType", 2000},
 	{"Special Thanks to", "Ogg Vorbis", 2000},
+#ifdef _WIN32
+	{"Special Thanks to", "Dev-C++, MinGW", 2000},
+#endif
 	{"Special Thanks to", "MilkyTracker", 2000},
 	{"Special Thanks to", "Inkscape", 2000},
 	{"Special Thanks to", "GIMP", 2000},
@@ -48,11 +57,15 @@ static Staff staff[] = {
 	{"Special Thanks to", "python", 2000},
 	{"Special Thanks to", "git and github.com", 2000},
 	{"Special Thanks to", "modules.pl", 2000},
+	{"Special Thanks to", "dot.tk", 2000},
 	{"Copyrights", NULL, 2000},
 	{"Source Code License", "GNU General Public Licence version 2", 3300},
 	{"Artwork License", "Creative Commons Attribution CC-BY-SA 3.0", 3300},
 	{"Copyright", "(C) Wolf King Studio, 2012.", 3300},
 	{"Copyright", "(C) Clanjor Productions, 2010-2012.", 3300},
+#ifdef _WIN32
+	{"Window$ Sucks", "It's really difficult to port this to Window$...", 5300},
+#endif
 	{"FrinX Game Engine", NULL, 0},
 };
 

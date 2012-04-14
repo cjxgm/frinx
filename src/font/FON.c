@@ -26,7 +26,11 @@ void FON_render(int x, int y, const char * str, int r, int g, int b)
 
 FON_Text * FON_gettext(const char * str, int r, int g, int b)
 {
+#ifdef _WIN32
+	SDL_Color color = {.r = b, .g = g, .b = r, .unused = 255};
+#else
 	SDL_Color color = {.r = r, .g = g, .b = b, .unused = 255};
+#endif
 	SDL_Surface * text = TTF_RenderUTF8_Blended(font, str, color);
 	assert(text);
 
@@ -35,12 +39,22 @@ FON_Text * FON_gettext(const char * str, int r, int g, int b)
 	if (clr_cnt == 4) {
 		if (text->format->Rmask == 0x000000FF)
 			 tex_fmt = GL_RGBA;
-		else tex_fmt = GL_BGRA;
+		else tex_fmt =
+#ifdef _WIN32
+						 GL_RGBA;
+#else
+						 GL_BGRA;
+#endif
 	}
 	else if (clr_cnt == 3) {
 		if (text->format->Rmask == 0x000000FF)
 			 tex_fmt = GL_RGB;
-		else tex_fmt = GL_BGR;
+		else tex_fmt = 
+#ifdef _WIN32
+						 GL_RGB;
+#else
+						 GL_BGR;
+#endif
 	}
 	else assert(!"Unknown surface format.");
 

@@ -1,0 +1,10 @@
+
+env = Environment(CC = 'gcc', \
+		CCFLAGS = '-Wall -s -O3 -mconsole', \
+		LIBS = Split('mingw32 SDLmain SDL_ttf freetype m z opengl32 glu32 SDL SDL_mixer SDL_image'))
+
+launcher = 'launcher/fge.c'
+env.Program(target = 'build/fge', \
+		source = Glob('src/*/*.c') + [launcher], \
+		CPPPATH = [str(f)+'/extern/' for f in Glob('src/*')])
+

@@ -20,12 +20,22 @@ int TEX_load(const char * file)
 	if (clr_cnt == 4) {
 		if (img->format->Rmask == 0x000000FF)
 			 tex_fmt = GL_RGBA;
-		else tex_fmt = GL_BGRA;
+		else tex_fmt =
+#ifdef _WIN32
+						 GL_RGBA;
+#else
+						 GL_BGRA;
+#endif
 	}
 	else if (clr_cnt == 3) {
 		if (img->format->Rmask == 0x000000FF)
 			 tex_fmt = GL_RGB;
-		else tex_fmt = GL_BGR;
+		else tex_fmt = 
+#ifdef _WIN32
+						 GL_RGB;
+#else
+						 GL_BGR;
+#endif
 	}
 	else return -1;
 

@@ -6,7 +6,7 @@
 
 OBJ_Object * OBJ_fo_load(const char * file)
 {
-	FILE * fp = fopen(file, "r");
+	FILE * fp = fopen(file, "rb");
 	if (!fp) return NULL;
 
 	CREATE(OBJ_Object, obj);
