@@ -10,11 +10,18 @@ Please see the wiki.
 
 ## Log
 
+**2012-04-14** 0.17
+
+* + players with "having xxx"(evil) animation
+* + naked 3d is disabled without command line option "--naked3d"
+* + More staff(I mean, crew)
+* + Embbeded Windows porting!
+* @ fixed several bugs
+
 **2012-04-03** 0.17
 
 * + naked-eye 3d!
 * + city
-* + camera collision
 * @ fixed several bugs
 
 **2012-03-17** 0.17
