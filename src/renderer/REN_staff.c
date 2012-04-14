@@ -68,7 +68,7 @@ void REN_staff_init()
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, WM_winw/2, 0, WM_winh, -1, 1);
+	glOrtho(0, WM_winw/(WM_naked3d+1), 0, WM_winh, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
@@ -93,7 +93,7 @@ static void draw(int isright)
 
 	glPushMatrix();
 
-	float offset = 1-2*isright;
+	float offset = (WM_naked3d ? 1-2*isright : 0);
 	float offset_title = 0;
 	float offset_item  = 0;
 
@@ -116,17 +116,17 @@ static void draw(int isright)
 
 
 	if (staff[sid].text[1]) {
-		FON_drawtext((WM_winw/2 - staff[sid].text[0]->realw)/2
+		FON_drawtext((WM_winw/(WM_naked3d+1) - staff[sid].text[0]->realw)/2
 						+ offset_title,
 					 WM_winh/2 - 15,
 					 staff[sid].text[0]);
-		FON_drawtext((WM_winw/2 - staff[sid].text[1]->realw)/2
+		FON_drawtext((WM_winw/(WM_naked3d+1) - staff[sid].text[1]->realw)/2
 						+ offset_item,
 					 WM_winh/2 + 15,
 					 staff[sid].text[1]);
 	}
 	else
-		FON_drawtext((WM_winw/2 - staff[sid].text[0]->realw)/2
+		FON_drawtext((WM_winw/(WM_naked3d+1) - staff[sid].text[0]->realw)/2
 						+ offset_title,
 					 (WM_winh - staff[sid].text[0]->realh)/2,
 					 staff[sid].text[0]);
@@ -156,9 +156,12 @@ void REN_staff()
 	if (WM_keydown)
 		exit(0);
 
-	glViewport(0, 0, WM_winw/2, WM_winh);
-	draw(0);
-	glViewport(WM_winw/2, 0, WM_winw/2, WM_winh);
-	draw(1);
+	if (WM_naked3d) {
+		glViewport(0, 0, WM_winw/2, WM_winh);
+		draw(0);
+		glViewport(WM_winw/2, 0, WM_winw/2, WM_winh);
+		draw(1);
+	}
+	else draw(0);
 }
 

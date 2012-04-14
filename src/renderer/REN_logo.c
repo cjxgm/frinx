@@ -92,7 +92,7 @@ static void draw(int isright)
 		glLineWidth(5);
 		float a = lirp(t, 2000, 3000, 6, 1);
 		glTranslatef(160 +
-			(1-isright*2)*(a/10-0.1),	// the naked3d staff
+			(WM_naked3d ? (1-isright*2)*(a/10-0.1) : 0),
 			120, 0);
 		glScalef(a, a, 1);
 		glTranslatef(-160, -120, 0);
@@ -191,9 +191,12 @@ void REN_logo()
 
 	proc_key();
 
-	glViewport(0, 0, WM_winw/2, WM_winh);
-	draw(0);
-	glViewport(WM_winw/2, 0, WM_winw/2, WM_winh);
-	draw(1);
+	if (WM_naked3d) {
+		glViewport(0, 0, WM_winw/2, WM_winh);
+		draw(0);
+		glViewport(WM_winw/2, 0, WM_winw/2, WM_winh);
+		draw(1);
+	}
+	else draw(0);
 }
 

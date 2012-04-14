@@ -11,6 +11,7 @@ const char * WM_wintitle = "FrinX Game Engine";
 unsigned char WM_key[384] = {0};
 unsigned char WM_keydown = 0;
 unsigned short WM_kmod = WM_KMOD_NONE;
+int WM_naked3d = 0;
 
 int WM_create(int w, int h, const char * title)
 {
