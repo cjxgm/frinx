@@ -119,69 +119,71 @@ static void proc_key()
 		}
 	}
 
-	if (!player_is_doing) {
-		if (WM_key['w'] || WM_key['s'] || WM_key['a'] || WM_key['d']) {
-			float fwd[3] = {CAM_forward[0], 0, CAM_forward[2]};
-			vec_normv(fwd);
-			float newpos[3];
-			vec_cpy(newpos, CAM_target);
+	if (WM_key['w'] || WM_key['s'] || WM_key['a'] || WM_key['d']) {
+		player_is_doing = 0;
+		OBJ_stopanim(player2);
 
-			if (WM_key['w']) {
-				newpos[0] += fwd[0] * 2*KE_spf;
-				/* DO NOT MOVE UP */
-				newpos[2] += fwd[2] * 2*KE_spf;
-				PHYS_collide(newpos, CAM_target, obj);
-				vec_cpy(CAM_target, newpos);
-				vec_cpy(player->rot, CAM_rot);
-				if (!OBJ_isanim(player, "walk"))
-					OBJ_playanim(player, "walk");
-			}
+		float fwd[3] = {CAM_forward[0], 0, CAM_forward[2]};
+		vec_normv(fwd);
+		float newpos[3];
+		vec_cpy(newpos, CAM_target);
 
-			if (WM_key['s']) {
-				newpos[0] -= fwd[0] * 2*KE_spf;
-				/* DO NOT MOVE DOWN */
-				newpos[2] -= fwd[2] * 2*KE_spf;
-				PHYS_collide(newpos, CAM_target, obj);
-				vec_cpy(CAM_target, newpos);
-				vec_cpy(player->rot, CAM_rot);
-				player->rot[1] -= 180;
-				if (!OBJ_isanim(player, "walk"))
-					OBJ_playanim(player, "walk");
-			}
-
-			if (WM_key['a']) {
-				float right[3];
-				vec_unit_normal(right, CAM_forward, CAM_up);
-				newpos[0] -= right[0] * 2*KE_spf;
-				/* DO NOT MOVE DOWN */
-				newpos[2] -= right[2] * 2*KE_spf;
-				PHYS_collide(newpos, CAM_target, obj);
-				vec_cpy(CAM_target, newpos);
-				vec_cpy(player->rot, CAM_rot);
-				player->rot[1] += 90;
-				if (!OBJ_isanim(player, "walk"))
-					OBJ_playanim(player, "walk");
-			}
-
-			if (WM_key['d']) {
-				float right[3];
-				vec_unit_normal(right, CAM_forward, CAM_up);
-				newpos[0] += right[0] * 2*KE_spf;
-				/* DO NOT MOVE DOWN */
-				newpos[2] += right[2] * 2*KE_spf;
-				PHYS_collide(newpos, CAM_target, obj);
-				vec_cpy(CAM_target, newpos);
-				vec_cpy(player->rot, CAM_rot);
-				player->rot[1] -= 90;
-				if (!OBJ_isanim(player, "walk"))
-					OBJ_playanim(player, "walk");
-			}
-
-			vec_cpy(player->pos, CAM_target);
-			player->pos[1] = 0.38;
+		if (WM_key['w']) {
+			newpos[0] += fwd[0] * 2*KE_spf;
+			/* DO NOT MOVE UP */
+			newpos[2] += fwd[2] * 2*KE_spf;
+			PHYS_collide(newpos, CAM_target, obj);
+			vec_cpy(CAM_target, newpos);
+			vec_cpy(player->rot, CAM_rot);
+			if (!OBJ_isanim(player, "walk"))
+				OBJ_playanim(player, "walk");
 		}
-		else OBJ_stopanim(player);
+
+		if (WM_key['s']) {
+			newpos[0] -= fwd[0] * 2*KE_spf;
+			/* DO NOT MOVE DOWN */
+			newpos[2] -= fwd[2] * 2*KE_spf;
+			PHYS_collide(newpos, CAM_target, obj);
+			vec_cpy(CAM_target, newpos);
+			vec_cpy(player->rot, CAM_rot);
+			player->rot[1] -= 180;
+			if (!OBJ_isanim(player, "walk"))
+				OBJ_playanim(player, "walk");
+		}
+
+		if (WM_key['a']) {
+			float right[3];
+			vec_unit_normal(right, CAM_forward, CAM_up);
+			newpos[0] -= right[0] * 2*KE_spf;
+			/* DO NOT MOVE DOWN */
+			newpos[2] -= right[2] * 2*KE_spf;
+			PHYS_collide(newpos, CAM_target, obj);
+			vec_cpy(CAM_target, newpos);
+			vec_cpy(player->rot, CAM_rot);
+			player->rot[1] += 90;
+			if (!OBJ_isanim(player, "walk"))
+				OBJ_playanim(player, "walk");
+		}
+
+		if (WM_key['d']) {
+			float right[3];
+			vec_unit_normal(right, CAM_forward, CAM_up);
+			newpos[0] += right[0] * 2*KE_spf;
+			/* DO NOT MOVE DOWN */
+			newpos[2] += right[2] * 2*KE_spf;
+			PHYS_collide(newpos, CAM_target, obj);
+			vec_cpy(CAM_target, newpos);
+			vec_cpy(player->rot, CAM_rot);
+			player->rot[1] -= 90;
+			if (!OBJ_isanim(player, "walk"))
+				OBJ_playanim(player, "walk");
+		}
+
+		vec_cpy(player->pos, CAM_target);
+		player->pos[1] = 0.38;
 	}
+	else if (!player_is_doing)
+		OBJ_stopanim(player);
 
 	/* mouse */{
 		int x, y;
