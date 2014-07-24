@@ -49,7 +49,7 @@ FON_Text * FON_gettext(const char * str, int r, int g, int b)
 	else if (clr_cnt == 3) {
 		if (text->format->Rmask == 0x000000FF)
 			 tex_fmt = GL_RGB;
-		else tex_fmt = 
+		else tex_fmt =
 #ifdef _WIN32
 						 GL_RGB;
 #else
@@ -74,8 +74,8 @@ FON_Text * FON_gettext(const char * str, int r, int g, int b)
 
 	glGenTextures(1, &txt->tex);
 	glBindTexture(GL_TEXTURE_2D, txt->tex);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, clr_cnt, txt->w, txt->h,
 			0, tex_fmt, GL_UNSIGNED_BYTE, px);
 

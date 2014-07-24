@@ -50,7 +50,7 @@ int  PHYS_collide_tri_seg(
 	vec_unit_normal(en, n, e[2]);
 	if (PHYS_classify_plane_point(en, t3, cp) < 0)
 		return 0;
-	
+
 	return 1;
 }
 
@@ -67,7 +67,7 @@ int  PHYS_collide_plane_seg(
 	vec_sub(cp, s2, s1);
 	vec_mulv(cp, a / (a-b) + 0.005);
 	vec_addv(cp, s1);
-	
+
 	return 1;
 }
 

@@ -11,7 +11,7 @@
 
 void OBJ_free(OBJ_Object * obj)
 {
-	/*FIXME: 
+	/*FIXME:
 	free(obj->vs);
 	free(obj->fs);
 	free(obj->ns);
@@ -50,7 +50,7 @@ void OBJ_draw(OBJ_Object * obj)
 				act->frames[frame2].vs[obj->fs[i].id[2]].co);
 		vec_unit_normal_3p(normal, co[0], co[1], co[2]);
 
-		
+
 		// draw
 		glNormal3fv(normal);
 

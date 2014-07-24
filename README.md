@@ -10,6 +10,13 @@ Please see the wiki.
 
 ## Log
 
+**2014-07-24** 0.17a
+
+* @ fixed timing bug (no more use of "clock()")
+* @ tidy up
+* + fps counter in stdout
+* @ some modification to staff(crew)
+
 **2012-04-14** 0.17
 
 * + players with "having xxx"(evil) animation
@@ -29,7 +36,7 @@ Please see the wiki.
 * @ redesigned frinx object file format for animation
 * + new Blender fo exporter
 * + animation supported!
-* @ Bug "object: draw without binding texture" fixed.	
+* @ Bug "object: draw without binding texture" fixed.
 * - build/res/object/city removed.
 * + build/res/object/anim new.
 * **KNOWN ISSUES**

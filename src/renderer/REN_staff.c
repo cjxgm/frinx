@@ -57,7 +57,6 @@ static Staff staff[] = {
 	{"Special Thanks to", "python", 2000},
 	{"Special Thanks to", "git and github.com", 2000},
 	{"Special Thanks to", "modules.pl", 2000},
-	{"Special Thanks to", "dot.tk", 2000},
 	{"Copyrights", NULL, 2000},
 	{"Source Code License", "GNU General Public Licence version 2", 3300},
 	{"Artwork License", "Creative Commons Attribution CC-BY-SA 3.0", 3300},

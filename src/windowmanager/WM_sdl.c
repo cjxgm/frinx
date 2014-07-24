@@ -29,27 +29,8 @@ int WM_create(int w, int h, const char * title)
 	SDL_WM_SetCaption(title, NULL);
 	SDL_ShowCursor(SDL_DISABLE);
 
-	/*glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(w, h);
-	glutCreateWindow(title);
-	glutTimerFunc(30, (void *)&init_func, 0);
-	glutKeyboardFunc(&keybd);
-	glutFullScreen();
-	*/
-/*
-	glutMouseFunc(&click);
-	glutMotionFunc(&drag);
-	glutPassiveMotionFunc(&hover);
-
-
-	glutReshapeFunc(&resize);
-	glutDisplayFunc(&display);
-#ifdef FULLSCREEN
-#endif
-	*/
-
 	KE_init();
-	
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glEnable(GL_BLEND);

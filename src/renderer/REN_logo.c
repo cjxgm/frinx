@@ -21,7 +21,7 @@ void REN_logo_init()
 {
 	vg  = MAN_res_loadvg ("logo");
 	mus = MAN_res_loadsnd("logo");
-			
+
 	// init sps
 	int i = 0;
 	sps_len = link_length(&vg->eqts);

@@ -20,7 +20,7 @@ int main(int argc, char * argv[])
 	regex_t		trs;
 	regmatch_t	trsg[3];
 	int			err;
-	char		str[1024*1024];	// 1MB 
+	char		str[1024*1024];	// 1MB
 	char	  * s = str;
 
 	// read in file, up to 1MB (It won't be so large for an SVG, right?)

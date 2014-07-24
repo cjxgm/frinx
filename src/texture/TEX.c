@@ -30,7 +30,7 @@ int TEX_load(const char * file)
 	else if (clr_cnt == 3) {
 		if (img->format->Rmask == 0x000000FF)
 			 tex_fmt = GL_RGB;
-		else tex_fmt = 
+		else tex_fmt =
 #ifdef _WIN32
 						 GL_RGB;
 #else
@@ -43,10 +43,12 @@ int TEX_load(const char * file)
 	GLuint tex;
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
 	glTexImage2D(GL_TEXTURE_2D, 0, clr_cnt, img->w, img->h,
 			0, tex_fmt, GL_UNSIGNED_BYTE, img->pixels);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	SDL_FreeSurface(img);
 
 	int err;

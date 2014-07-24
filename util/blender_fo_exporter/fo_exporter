@@ -46,7 +46,7 @@ class MenuShowError(bpy.types.Menu):
 				showIcon = False
 			else:
 				layout.label(text=line)
-			
+
 
 def showError(msg):
 	MenuShowError.msg = msg;
@@ -160,7 +160,7 @@ def fx_export(file):
 
 	ob  = get_ob_by_type('MESH')
 	arm = get_ob_by_type('ARMATURE')
-	
+
 	# XXX, exclude collision boundary mesh
 	export_face(ob.data)
 
@@ -183,3 +183,4 @@ def fx_export(file):
 	file.close()
 
 fx_export(OUTPUT_FILE);
+
